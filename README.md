@@ -1,7 +1,7 @@
 ## Install and running app
 ```
-$ git clone https://github.com/vubom01/vvv.git
-$ cd vvv
+$ git clone https://github.com/vubom01/pes_rescue
+$ cd pes_rescue
 $ virtualenv -p python3 .venv
 $ source .venv/bin/activate (Ubuntu)
   .venv\Scripts\activate (Windows)
