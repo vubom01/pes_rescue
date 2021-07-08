@@ -8,14 +8,18 @@ def login():
     username = request.json.get('username')
     password = request.json.get('password')
     account = UserService.authentication(username=username, password=password)
-    msg = ''
+    msg: str
+    stt: bool
     if account:
         session['loggedin'] = True
         session['id'] = account['id']
         session['username'] = account['username']
         msg = 'Logged in successfully!'
+        stt = True
     else:
         msg = 'Incorrect username/ password'
+        stt = False
     return Message(
+        status=stt,
         message=msg
     ).dict()
