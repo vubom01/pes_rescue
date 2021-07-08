@@ -15,7 +15,7 @@ def login():
         session['username'] = account['username']
         msg = 'Logged in successfully!'
     else:
-        msg = 'Incorrect username/password'
+        msg = 'Incorrect username/ password'
     return Message(
         message=msg
     ).dict()
