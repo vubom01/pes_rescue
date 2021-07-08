@@ -14,7 +14,6 @@ $ python main.py
 ```
 ├── app  
 │   ├── api         // các file api được đặt trong này  
-│   ├── models      // Database model, tích hợp với alembic để auto generate migration  
 │   ├── schemas     // Pydantic Schema  
 │   ├── services    // Chứa logic CRUD giao tiếp với DB  
 │   └── main.py     // cấu hình chính của toàn bộ project  
