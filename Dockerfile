@@ -1,4 +1,4 @@
-FROM mysql:5.7
+FROM mysql:latest
 ENV MYSQL_ROOT_PASSWORD root
 # tên database
 ENV MYSQL_DATABASE pet_rescue
