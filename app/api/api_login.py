@@ -12,7 +12,7 @@ def login():
     stt: bool
     if account:
         session['loggedin'] = True
-        session['id'] = account['id']
+        session['id'] = account['id_user']
         session['username'] = account['username']
         msg = 'Logged in successfully!'
         stt = True
