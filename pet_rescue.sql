@@ -18,7 +18,6 @@
 --
 -- Table structure for table `animal`;
 --
-DROP SCHEMA IF EXISTS `animalHelper`;
 CREATE DATABASE `animalHelper`;
 DROP TABLE IF EXISTS `animal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
