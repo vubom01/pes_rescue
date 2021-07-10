@@ -16,122 +16,95 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `animal`
+-- Table structure for table `donate_detail`
 --
 
-DROP TABLE IF EXISTS `animal`;
+DROP TABLE IF EXISTS `donate_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `animal` (
-  `idanimal` varchar(45) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `age` varchar(45) NOT NULL,
-  `color` varchar(45) NOT NULL,
-  `healthCondition` varchar(45) NOT NULL,
-  `weight` varchar(45) NOT NULL,
-  `Description` longtext,
-  `species` varchar(45) NOT NULL,
-  PRIMARY KEY (`idanimal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `animal`
---
-
-LOCK TABLES `animal` WRITE;
-/*!40000 ALTER TABLE `animal` DISABLE KEYS */;
-/*!40000 ALTER TABLE `animal` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `donate_info`
---
-
-DROP TABLE IF EXISTS `donate_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `donate_info` (
-  `iddonate_info` varchar(45) NOT NULL,
-  `id_donater` varchar(45) NOT NULL,
-  `date_donate` date NOT NULL,
+CREATE TABLE `donate_detail` (
+  `id` varchar(45) NOT NULL,
+  `sponsor_id` varchar(45) NOT NULL,
+  `created_at` date NOT NULL,
   `so_tai_khoan` varchar(45) NOT NULL,
   `ma_giao_dich` varchar(45) NOT NULL,
   `ten_ngan_hang` varchar(45) NOT NULL,
-  `message` longblob NOT NULL,
-  PRIMARY KEY (`iddonate_info`),
-  KEY `fk_donate_donater_idx` (`id_donater`),
-  CONSTRAINT `fk_donate_donater` FOREIGN KEY (`id_donater`) REFERENCES `sponsors` (`id_sponsor`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `message` longblob,
+  PRIMARY KEY (`id`),
+  KEY `fk_sponsor_detail_idx` (`sponsor_id`),
+  CONSTRAINT `fk_sponsor_detail` FOREIGN KEY (`sponsor_id`) REFERENCES `sponsors` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `donate_info`
+-- Dumping data for table `donate_detail`
 --
 
-LOCK TABLES `donate_info` WRITE;
-/*!40000 ALTER TABLE `donate_info` DISABLE KEYS */;
-/*!40000 ALTER TABLE `donate_info` ENABLE KEYS */;
+LOCK TABLES `donate_detail` WRITE;
+/*!40000 ALTER TABLE `donate_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `donate_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `healthreport`
+-- Table structure for table `health_report`
 --
 
-DROP TABLE IF EXISTS `healthreport`;
+DROP TABLE IF EXISTS `health_report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `healthreport` (
-  `idhealthreport` varchar(45) NOT NULL,
-  `idAnimal` varchar(45) NOT NULL,
-  `date_create` date NOT NULL,
-  `idVeterinarian` varchar(45) NOT NULL,
+CREATE TABLE `health_report` (
+  `id_health_report` varchar(45) NOT NULL,
+  `pet_id` varchar(45) NOT NULL,
+  `create_at` date NOT NULL,
+  `veterinarian_id` varchar(45) NOT NULL,
   `health_status` varchar(45) NOT NULL,
   `weight` double NOT NULL,
-  `Description` longblob NOT NULL,
+  `description` longblob NOT NULL,
   `image` longblob NOT NULL,
-  PRIMARY KEY (`idhealthreport`),
-  KEY `fk_report_animal_idx` (`idAnimal`),
-  KEY `fk_report_veterinarian_idx` (`idVeterinarian`),
-  CONSTRAINT `fk_report_animal` FOREIGN KEY (`idAnimal`) REFERENCES `animal` (`idanimal`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_report_veterinarian` FOREIGN KEY (`idVeterinarian`) REFERENCES `veterinarians` (`id_veterinarian`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  PRIMARY KEY (`id_health_report`),
+  KEY `fk_report_animal_idx` (`pet_id`),
+  KEY `fk_report_veterinarian_idx` (`veterinarian_id`),
+  CONSTRAINT `fk_report_animal` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_report_veterinarian` FOREIGN KEY (`veterinarian_id`) REFERENCES `veterinarians` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `healthreport`
+-- Dumping data for table `health_report`
 --
 
-LOCK TABLES `healthreport` WRITE;
-/*!40000 ALTER TABLE `healthreport` DISABLE KEYS */;
-/*!40000 ALTER TABLE `healthreport` ENABLE KEYS */;
+LOCK TABLES `health_report` WRITE;
+/*!40000 ALTER TABLE `health_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `health_report` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `register_work_time`
+-- Table structure for table `pets`
 --
 
-DROP TABLE IF EXISTS `register_work_time`;
+DROP TABLE IF EXISTS `pets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `register_work_time` (
-  `idregister_work_time` varchar(45) NOT NULL,
-  `id_volunteer` varchar(45) NOT NULL,
-  `time` varchar(45) NOT NULL,
-  `date_in_week` varchar(45) NOT NULL,
-  PRIMARY KEY (`idregister_work_time`),
-  KEY `fk_time_veterinarian_idx` (`id_volunteer`),
-  CONSTRAINT `fk_time_veterinarian` FOREIGN KEY (`id_volunteer`) REFERENCES `volunteers` (`id_volunteers`) ON DELETE RESTRICT ON UPDATE RESTRICT
+CREATE TABLE `pets` (
+  `id` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `age` varchar(45) NOT NULL,
+  `color` varchar(45) NOT NULL,
+  `health_condition` varchar(45) NOT NULL,
+  `weight` varchar(45) NOT NULL,
+  `description` longtext,
+  `species` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `register_work_time`
+-- Dumping data for table `pets`
 --
 
-LOCK TABLES `register_work_time` WRITE;
-/*!40000 ALTER TABLE `register_work_time` DISABLE KEYS */;
-/*!40000 ALTER TABLE `register_work_time` ENABLE KEYS */;
+LOCK TABLES `pets` WRITE;
+/*!40000 ALTER TABLE `pets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pets` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -142,14 +115,12 @@ DROP TABLE IF EXISTS `sponsors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sponsors` (
-  `id_sponsor` varchar(45) NOT NULL,
+  `id` varchar(45) NOT NULL,
   `fullname` varchar(45) NOT NULL,
-  `age` int NOT NULL,
-  `phone` varchar(45) NOT NULL,
-  `address` varchar(90) NOT NULL,
   `email` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_sponsor`),
-  CONSTRAINT `fk_donater_donate` FOREIGN KEY (`id_sponsor`) REFERENCES `donate_info` (`iddonate_info`)
+  `phone` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -163,6 +134,34 @@ LOCK TABLES `sponsors` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_detail`
+--
+
+DROP TABLE IF EXISTS `user_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_detail` (
+  `user_id` varchar(45) NOT NULL,
+  `fullname` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `position` varchar(45) NOT NULL,
+  `phone` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  KEY `fk_user_detail_idx` (`user_id`),
+  CONSTRAINT `fk_user_detail` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_detail`
+--
+
+LOCK TABLES `user_detail` WRITE;
+/*!40000 ALTER TABLE `user_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_detail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -170,12 +169,10 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `id_user` varchar(45) NOT NULL,
+  `user_id` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `date_register` date NOT NULL,
-  PRIMARY KEY (`id_user`)
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -196,14 +193,13 @@ DROP TABLE IF EXISTS `veterinarians`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `veterinarians` (
-  `id_veterinarian` varchar(45) NOT NULL,
+  `id` varchar(45) NOT NULL,
   `fullname` varchar(45) NOT NULL,
   `phone` varchar(45) NOT NULL,
   `address` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `facebooklink` varchar(100) DEFAULT NULL,
-  `work_in_week` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_veterinarian`)
+  `work_in_week` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -217,32 +213,29 @@ LOCK TABLES `veterinarians` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `volunteers`
+-- Table structure for table `work_time`
 --
 
-DROP TABLE IF EXISTS `volunteers`;
+DROP TABLE IF EXISTS `work_time`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `volunteers` (
-  `id_volunteers` varchar(45) NOT NULL,
-  `fullname` varchar(45) NOT NULL,
-  `age` int NOT NULL,
-  `phone` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `date_register` date NOT NULL,
-  `address` varchar(200) NOT NULL,
-  `position` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_volunteers`)
+CREATE TABLE `work_time` (
+  `user_id` varchar(45) NOT NULL,
+  `open_time` varchar(45) NOT NULL,
+  `close_time` varchar(45) NOT NULL,
+  `work_at` varchar(45) NOT NULL,
+  KEY `fk_user_time_idx` (`user_id`),
+  CONSTRAINT `fk_user_time` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `volunteers`
+-- Dumping data for table `work_time`
 --
 
-LOCK TABLES `volunteers` WRITE;
-/*!40000 ALTER TABLE `volunteers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `volunteers` ENABLE KEYS */;
+LOCK TABLES `work_time` WRITE;
+/*!40000 ALTER TABLE `work_time` DISABLE KEYS */;
+/*!40000 ALTER TABLE `work_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -254,4 +247,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-09 16:38:40
+-- Dump completed on 2021-07-10 10:12:25
