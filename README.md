@@ -17,8 +17,9 @@ $ docker run --name {name} --restart always -p 3306:3306 -d {name_image}
 ## Cấu trúc project
 ```
 ├── app  
-│   ├── api         // các file api được đặt trong này  
-│   ├── schemas     // Pydantic Schema  
+│   ├── api         // các file api được đặt trong này
+│   ├── db          // cấu hình database
+│   ├── schemas     // Pydantic Schema 
 │   ├── services    // Chứa logic CRUD giao tiếp với DB  
 │   └── main.py     // cấu hình chính của toàn bộ project  
 ├── .gitignore  
