@@ -1,10 +1,10 @@
-from app import mysql
-import MySQLdb
+from app.db.base import mysql
 
 class UserService(object):
     @staticmethod
     def authentication(username: str, password: str):
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password,))
+        cursor = mysql.cursor()
+        query = 'select * from users where username = %s and password = %s'
+        cursor.execute(query, (username, password,))
         account = cursor.fetchone()
         return account
