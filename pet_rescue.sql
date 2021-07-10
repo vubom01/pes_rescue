@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.25, for Linux (x86_64)
 --
--- Host: localhost    Database: pet_rescue
+-- Host: 127.0.0.1    Database: pet_rescue
 -- ------------------------------------------------------
 -- Server version	8.0.25
 
@@ -248,3 +248,5 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2021-07-10 10:12:25
+
+-- Dump completed on 2021-07-09 22:31:39
