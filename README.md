@@ -1,7 +1,7 @@
 ## Install 
 ```
-$ git clone https://github.com/vubom01/pet_rescue
-$ cd pet_rescue
+$ git clone https://github.com/vubom01/pet-rescue
+$ cd pet-rescue
 $ virtualenv -p python3 .venv
 $ source .venv/bin/activate (Ubuntu)
   .venv\Scripts\activate (Windows)
