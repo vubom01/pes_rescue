@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.25, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: pet_rescue
 -- ------------------------------------------------------
@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS `health_report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `health_report` (
-  `id_health_report` varchar(45) NOT NULL,
+  `id` varchar(45) NOT NULL,
   `pet_id` varchar(45) NOT NULL,
   `create_at` date NOT NULL,
   `veterinarian_id` varchar(45) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE `health_report` (
   `weight` double NOT NULL,
   `description` longblob NOT NULL,
   `image` longblob NOT NULL,
-  PRIMARY KEY (`id_health_report`),
+  PRIMARY KEY (`id`),
   KEY `fk_report_animal_idx` (`pet_id`),
   KEY `fk_report_veterinarian_idx` (`veterinarian_id`),
   CONSTRAINT `fk_report_animal` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -148,7 +148,7 @@ CREATE TABLE `user_detail` (
   `phone` varchar(45) NOT NULL,
   `address` varchar(45) NOT NULL,
   KEY `fk_user_detail_idx` (`user_id`),
-  CONSTRAINT `fk_user_detail` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+  CONSTRAINT `fk_user_detail` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -169,10 +169,10 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `user_id` varchar(45) NOT NULL,
+  `id` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -182,6 +182,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES ('us_01','test','test'),('us_02','admin','admin');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,11 +222,11 @@ DROP TABLE IF EXISTS `work_time`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `work_time` (
   `user_id` varchar(45) NOT NULL,
-  `open_time` varchar(45) NOT NULL,
-  `close_time` varchar(45) NOT NULL,
-  `work_at` varchar(45) NOT NULL,
+  `open_time` int NOT NULL,
+  `close_time` int NOT NULL,
+  `work_at` date NOT NULL,
   KEY `fk_user_time_idx` (`user_id`),
-  CONSTRAINT `fk_user_time` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+  CONSTRAINT `fk_user_time` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -247,6 +248,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-10 10:12:25
-
--- Dump completed on 2021-07-09 22:31:39
+-- Dump completed on 2021-07-11  8:25:19
