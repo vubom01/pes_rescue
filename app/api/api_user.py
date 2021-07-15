@@ -7,7 +7,7 @@ from app.services.srv_user import UserService
 logger = logging.getLogger()
 router = APIRouter()
 
-@router.get("/me", dependencies=[Depends(login_required)], response_model=UserItemResponse)
+@router.get('/info', dependencies=[Depends(login_required)], response_model=UserItemResponse)
 def detail_me(current_user: UserItemResponse = Depends(UserService().get_current_user)):
     return current_user
 
