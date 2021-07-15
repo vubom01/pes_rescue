@@ -20,6 +20,7 @@ $ docker run --name {name} --restart always -p 3306:3306 -d {name_image}
 │   ├── api         // các file api được đặt trong này
 │   ├── core        // config and sercurity
 │   ├── db          // cấu hình database
+│   ├── helpers     // các function hỗ trợ
 │   ├── schemas     // Pydantic Schema 
 │   ├── services    // Chứa logic CRUD giao tiếp với DB  
 │   └── main.py     // cấu hình chính của toàn bộ project  
