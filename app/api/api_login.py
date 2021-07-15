@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.schemas.sche_base import Message
+from app.schemas.sche_token import Token
 from app.services.srv_user import UserService
+from app.core.sercurity import create_access_token
 
 router = APIRouter()
 
@@ -9,17 +10,11 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
-@router.post('', response_model=Message)
+@router.post('', response_model=Token)
 def login(request: LoginRequest):
     user = UserService.authentication(username=request.username, password=request.password)
-    response = {
-        'message': str,
-        'status': bool
-    }
-    if user:
-        response['message'] = 'Successful!'
-        response['status'] = True
-    else:
-        response['message'] = 'Incorrect username/ password'
-        response['status'] = False
-    return response
+    if not user:
+        raise HTTPException(status_code=400, detail='Incorrect email or password')
+    return Token(
+        access_token=create_access_token(user_id=user['id'])
+    )

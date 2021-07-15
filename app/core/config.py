@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     API_PREFIX = ''
     BACKEND_CORS_ORIGINS = ['*']
     ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7  # Token expired after 7 days
+    SECRET_KEY = '123456'
+    SECURITY_ALGORITHM = 'HS256'
 
 
 settings = Settings()
