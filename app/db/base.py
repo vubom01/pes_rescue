@@ -1,4 +1,5 @@
 import pymysql.cursors
+
 from app.core.config import settings
 
 mysql = pymysql.connect(host=settings.MYSQL_HOST,

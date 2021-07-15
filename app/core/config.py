@@ -1,5 +1,6 @@
 from pydantic import BaseSettings
 
+
 class Settings(BaseSettings):
     MYSQL_HOST = '127.0.0.1'
     MYSQL_USER = 'root'

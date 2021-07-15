@@ -1,11 +1,13 @@
 import jwt
-from app.core.config import settings
-from app.db.base import mysql
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer
 from pydantic import ValidationError
-from app.schemas.sche_token import TokenPayload
-from fastapi import Depends, HTTPException
 from starlette import status
+
+from app.core.config import settings
+from app.core.security import get_password_hash, verify_password
+from app.db.base import mysql
+from app.schemas.sche_token import TokenPayload
 from app.schemas.sche_user import UserRegisterRequest
 
 
@@ -24,7 +26,7 @@ class UserService(object):
         user = cursor.fetchone()
         if not user:
             return None
-        if password != user['password']:
+        if not verify_password(password, user['password']):
             return None
         return user
 
@@ -64,6 +66,6 @@ class UserService(object):
         cursor = mysql.cursor()
         query = 'insert into users (username, password, first_name, last_name, email, phone_number) ' \
                 'values (%s, %s, %s, %s, %s, %s)'
-        cursor.execute(query, (data.username, data.password, data.first_name, data.last_name, data.email,
-                               data.phone_number,))
+        cursor.execute(query, (data.username, get_password_hash(data.password), data.first_name, data.last_name,
+                               data.email, data.phone_number,))
         mysql.commit()

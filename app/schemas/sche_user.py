@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class UserItemResponse(BaseModel):
     id: int
     username: str
