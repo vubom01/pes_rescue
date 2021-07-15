@@ -134,34 +134,6 @@ LOCK TABLES `sponsors` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_detail`
---
-
-DROP TABLE IF EXISTS `user_detail`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_detail` (
-  `user_id` varchar(45) NOT NULL,
-  `fullname` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `position` varchar(45) NOT NULL,
-  `phone` varchar(45) NOT NULL,
-  `address` varchar(45) NOT NULL,
-  KEY `fk_user_detail_idx` (`user_id`),
-  CONSTRAINT `fk_user_detail` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_detail`
---
-
-LOCK TABLES `user_detail` WRITE;
-/*!40000 ALTER TABLE `user_detail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_detail` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `users`
 --
 
@@ -169,11 +141,16 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `id` varchar(45) NOT NULL,
-  `username` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL DEFAULT 'guest',
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +159,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('us_01','test','test'),('us_02','admin','admin');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,12 +197,12 @@ DROP TABLE IF EXISTS `work_time`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `work_time` (
-  `user_id` varchar(45) NOT NULL,
-  `open_time` int NOT NULL,
-  `close_time` int NOT NULL,
-  `work_at` date NOT NULL,
+  `user_id` int NOT NULL,
+  `start_at` int NOT NULL,
+  `end_at` int NOT NULL,
+  `date` date NOT NULL,
   KEY `fk_user_time_idx` (`user_id`),
-  CONSTRAINT `fk_user_time` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `fk_user_time` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -248,4 +224,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-11  8:25:19
+-- Dump completed on 2021-07-15 20:59:23
