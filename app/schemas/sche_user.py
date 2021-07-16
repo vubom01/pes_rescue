@@ -24,4 +24,4 @@ class UserUpdateRequest(BaseModel):
     last_name: Optional[str]
     email: Optional[str]
     phone_number: Optional[str]
-
+    password: Optional[str]

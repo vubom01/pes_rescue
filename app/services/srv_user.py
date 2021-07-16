@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.db.base import mysql
 from app.schemas.sche_token import TokenPayload
-from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest
+from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest, UserItemResponse
 
 
 class UserService(object):
@@ -71,8 +71,23 @@ class UserService(object):
         mysql.commit()
 
     @staticmethod
-    def update_current_user(data: UserUpdateRequest, id: int):
+    def update_current_user(data: UserUpdateRequest, current_user: UserItemResponse):
+        if data.first_name is None:
+            data.first_name = current_user['first_name']
+        if data.last_name is None:
+            data.last_name = current_user['last_name']
+        if data.email is None:
+            data.email = current_user['email']
+        if data.phone_number is None:
+            data.phone_number = current_user['phone_number']
+        if data.password is None:
+            data.password = current_user['password']
+        else:
+            data.password = get_password_hash(data.password)
+
         cursor = mysql.cursor()
-        query = 'update users set first_name = %s, last_name = %s, email = %s, phone_number = %s where id = %s'
-        cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number, id,))
+        query = 'update users set first_name = %s, last_name = %s, email = %s, phone_number = %s, password = %s ' \
+                'where id = %s'
+        cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number, data.password,
+                               current_user['id'],))
         mysql.commit()
