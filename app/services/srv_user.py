@@ -62,7 +62,7 @@ class UserService(object):
         return user
 
     @staticmethod
-    def register_user(data=UserRegisterRequest):
+    def register_user(data: UserRegisterRequest):
         cursor = mysql.cursor()
         query = 'insert into users (username, password, first_name, last_name, email, phone_number) ' \
                 'values (%s, %s, %s, %s, %s, %s)'
@@ -71,9 +71,8 @@ class UserService(object):
         mysql.commit()
 
     @staticmethod
-    def update_user_info(data=UserUpdateRequest):
+    def update_current_user(data: UserUpdateRequest, id: int):
         cursor = mysql.cursor()
-        query = 'update users set first_name = %s, last_name = %s, email = %s, phone_number = %s where username = %s'
-        cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number,data.username,))
+        query = 'update users set first_name = %s, last_name = %s, email = %s, phone_number = %s where id = %s'
+        cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number, id,))
         mysql.commit()
-        return cursor.rowcount

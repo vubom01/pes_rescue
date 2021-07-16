@@ -13,22 +13,18 @@ router = APIRouter()
 def detail_me(current_user: UserItemResponse = Depends(UserService().get_current_user)):
     return current_user
 
-@router.put('/update',dependencies=[Depends(login_required)])
-def update_info(request: UserUpdateRequest,user: UserItemResponse = Depends(UserService().get_current_user)):
-    if request.first_name == None:
-        request.first_name = user['first_name']
-    if request.last_name == None:
-        request.last_name = user['last_name']
-    if request.email == None:
-        request.email = user['emai']
-    if request.phone_number == None:
-        request.phone_number = user['phone_number']
-    request.username = user['username']
-    rowAffected = UserService.update_user_info(request)
-    if rowAffected == 0:
-        raise HTTPException(status_code=400, detail='Update failed')
-    return {
-        'message': 'Update success'
-    }
+@router.put('/info', dependencies=[Depends(login_required)])
+def update_me(request: UserUpdateRequest):
+    current_user: UserService().get_current_user
+    if request.first_name is None:
+        request.first_name = current_user['first_name']
+    if request.last_name is None:
+        request.last_name = current_user['last_name']
+    if request.email is None:
+        request.email = current_user['email']
+    if request.phone_number is None:
+        request.phone_number = current_user['phone_number']
+    request.username = current_user['username']
+    UserService.update_current_user(data=request, id=current_user['id'])
 
 
