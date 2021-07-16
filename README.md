@@ -11,7 +11,7 @@ $ pip install -r requirements.txt
 ## Connect database 
 ```
 $ docker build -t {name_image} .
-$ docker run --name {name} --restart always -p 3306:3306 -d {name_image}
+$ docker run --name {name} --restart unless-stopped -p 3306:3306 -d {name_image}
 ```
 
 ## Cấu trúc project
