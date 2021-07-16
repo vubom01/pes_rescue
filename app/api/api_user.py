@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from app.helpers.login_manager import login_required
 from app.schemas.sche_user import UserItemResponse, UserUpdateRequest
