@@ -14,8 +14,7 @@ def detail_me(current_user: UserItemResponse = Depends(UserService().get_current
     return current_user
 
 @router.put('/info', dependencies=[Depends(login_required)])
-def update_me(request: UserUpdateRequest):
-    current_user: UserService().get_current_user
+def update_me(request: UserUpdateRequest, current_user: UserItemResponse = Depends(UserService().get_current_user)):
     if request.first_name is None:
         request.first_name = current_user['first_name']
     if request.last_name is None:
@@ -24,7 +23,6 @@ def update_me(request: UserUpdateRequest):
         request.email = current_user['email']
     if request.phone_number is None:
         request.phone_number = current_user['phone_number']
-    request.username = current_user['username']
     UserService.update_current_user(data=request, id=current_user['id'])
 
 
