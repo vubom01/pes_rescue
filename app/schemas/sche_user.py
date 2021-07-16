@@ -17,3 +17,10 @@ class UserRegisterRequest(BaseModel):
     email: str
     phone_number: str
 
+class UserUpdateRequest(BaseModel):
+    username: str
+    first_name: str
+    last_name: str
+    email: str
+    phone_number: str
+

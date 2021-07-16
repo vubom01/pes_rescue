@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.db.base import mysql
 from app.schemas.sche_token import TokenPayload
-from app.schemas.sche_user import UserRegisterRequest
+from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest
 
 
 class UserService(object):
@@ -69,3 +69,11 @@ class UserService(object):
         cursor.execute(query, (data.username, get_password_hash(data.password), data.first_name, data.last_name,
                                data.email, data.phone_number,))
         mysql.commit()
+
+    @staticmethod
+    def update_user_info(data=UserUpdateRequest):
+        cursor = mysql.cursor()
+        query = 'update users set first_name = %s, last_name = %s, email = %s, phone_number = %s where username = %s'
+        cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number,data.username,))
+        mysql.commit()
+        return cursor.rowcount
