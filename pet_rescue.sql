@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.25, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: pet_rescue
 -- ------------------------------------------------------
@@ -23,16 +23,16 @@ DROP TABLE IF EXISTS `donate_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `donate_detail` (
-  `id` varchar(45) NOT NULL,
-  `sponsor_id` varchar(45) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sponsor_id` int NOT NULL,
   `created_at` date NOT NULL,
-  `so_tai_khoan` varchar(45) NOT NULL,
-  `ma_giao_dich` varchar(45) NOT NULL,
-  `ten_ngan_hang` varchar(45) NOT NULL,
-  `message` longblob,
+  `so_tai_khoan` varchar(255) NOT NULL,
+  `ma_giao_dich` varchar(255) NOT NULL,
+  `ten_ngan_hang` varchar(255) NOT NULL,
+  `message` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_sponsor_detail_idx` (`sponsor_id`),
-  CONSTRAINT `fk_sponsor_detail` FOREIGN KEY (`sponsor_id`) REFERENCES `sponsors` (`id`)
+  KEY `fk_donate_info_idx` (`sponsor_id`),
+  CONSTRAINT `fk_donate_info` FOREIGN KEY (`sponsor_id`) REFERENCES `sponsors` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -53,19 +53,19 @@ DROP TABLE IF EXISTS `health_report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `health_report` (
-  `id` varchar(45) NOT NULL,
-  `pet_id` varchar(45) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pet_id` int NOT NULL,
   `create_at` date NOT NULL,
-  `veterinarian_id` varchar(45) NOT NULL,
-  `health_status` varchar(45) NOT NULL,
+  `veterinarian_id` int NOT NULL,
+  `health_status` varchar(255) NOT NULL,
   `weight` double NOT NULL,
   `description` longblob NOT NULL,
   `image` longblob NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_report_animal_idx` (`pet_id`),
-  KEY `fk_report_veterinarian_idx` (`veterinarian_id`),
-  CONSTRAINT `fk_report_animal` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_report_veterinarian` FOREIGN KEY (`veterinarian_id`) REFERENCES `veterinarians` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  KEY `fk_report_pet_idx` (`pet_id`),
+  KEY `fk_report_veterian_idx` (`veterinarian_id`),
+  CONSTRAINT `fk_report_pet` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_report_veterian` FOREIGN KEY (`veterinarian_id`) REFERENCES `veterinarians` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -79,6 +79,30 @@ LOCK TABLES `health_report` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pet_images`
+--
+
+DROP TABLE IF EXISTS `pet_images`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pet_images` (
+  `pet_id` int NOT NULL AUTO_INCREMENT,
+  `file` varchar(255) NOT NULL,
+  PRIMARY KEY (`pet_id`),
+  CONSTRAINT `fk_image_pet` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pet_images`
+--
+
+LOCK TABLES `pet_images` WRITE;
+/*!40000 ALTER TABLE `pet_images` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pet_images` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pets`
 --
 
@@ -86,14 +110,14 @@ DROP TABLE IF EXISTS `pets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pets` (
-  `id` varchar(45) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `age` varchar(45) NOT NULL,
-  `color` varchar(45) NOT NULL,
-  `health_condition` varchar(45) NOT NULL,
-  `weight` varchar(45) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `age` varchar(255) NOT NULL,
+  `color` varchar(255) NOT NULL,
+  `health_condition` varchar(255) NOT NULL,
+  `weight` double NOT NULL,
   `description` longtext,
-  `species` varchar(45) NOT NULL,
+  `species` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -115,11 +139,11 @@ DROP TABLE IF EXISTS `sponsors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sponsors` (
-  `id` varchar(45) NOT NULL,
-  `fullname` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `phone` varchar(45) NOT NULL,
-  `address` varchar(45) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -170,12 +194,12 @@ DROP TABLE IF EXISTS `veterinarians`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `veterinarians` (
-  `id` varchar(45) NOT NULL,
-  `fullname` varchar(45) NOT NULL,
-  `phone` varchar(45) NOT NULL,
-  `address` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `work_in_week` varchar(45) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `work_in_week` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -224,4 +248,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-15 21:21:37
+-- Dump completed on 2021-07-19 21:53:14
