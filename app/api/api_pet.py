@@ -20,7 +20,7 @@ def create_pet_info(request: PetInfoRequest, current_user: UserItemResponse = De
     exist_pet = PetService.is_exist_pet(name=request.name)
     if exist_pet:
         raise HTTPException(status_code=400, detail='Pet is already exist')
-    PetService.pet_input_info(request)
+    PetService.create_pet_info(request)
     pet_id = PetService.is_exist_pet(name=request.name)['id']
     return {
         'pet_id': pet_id

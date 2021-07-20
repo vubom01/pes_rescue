@@ -22,7 +22,7 @@ class PetService(object):
         return pet
 
     @staticmethod
-    def pet_input_info(data: PetInfoRequest):
+    def create_pet_info(data: PetInfoRequest):
         cursor = mysql.cursor()
         query = 'insert into pets(name, age, color, health_condition, weight, species, description)' \
                 'values (%s, %s, %s, %s, %s, %s, %s);'
