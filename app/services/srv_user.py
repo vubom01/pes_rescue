@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.db.base import mysql
 from app.schemas.sche_token import TokenPayload
-from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest, UserItemResponse
+from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest, UserItemResponse, UpdatePermissionRequest
 
 
 class UserService(object):
@@ -45,7 +45,7 @@ class UserService(object):
             )
         cursor = mysql.cursor()
         query = 'select * from users where id = %s'
-        cursor.execute(query, token_data.user_id,)
+        cursor.execute(query, token_data.user_id, )
         user = cursor.fetchone()
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
@@ -90,4 +90,14 @@ class UserService(object):
                 'where id = %s'
         cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number, data.password,
                                current_user['id'],))
+        mysql.commit()
+
+    @staticmethod
+    def update_permission(data: UpdatePermissionRequest, current_user: UserItemResponse):
+        role = UserService.is_exist_user(current_user['username'])['role']
+        if role != 'admin':
+            raise HTTPException(status_code=403, detail="Forbidden action")
+        cursor = mysql.cursor()
+        query = 'update users set role = %s where id = %s;'
+        cursor.execute(query, (data.role, data.user_id,))
         mysql.commit()

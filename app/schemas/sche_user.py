@@ -11,6 +11,7 @@ class UserItemResponse(BaseModel):
     email: str
     phone_number: str
 
+
 class UserRegisterRequest(BaseModel):
     username: str
     password: str
@@ -19,9 +20,15 @@ class UserRegisterRequest(BaseModel):
     email: str
     phone_number: str
 
+
 class UserUpdateRequest(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     email: Optional[str]
     phone_number: Optional[str]
     password: Optional[str]
+
+
+class UpdatePermissionRequest(BaseModel):
+    user_id: int
+    role: str
