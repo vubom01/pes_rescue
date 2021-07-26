@@ -10,11 +10,11 @@ from app.services.srv_user import UserService
 logger = logging.getLogger()
 router = APIRouter()
 
-@router.get('/info', dependencies=[Depends(login_required)], response_model=UserItemResponse)
+@router.get('/me', dependencies=[Depends(login_required)], response_model=UserItemResponse)
 def detail_me(current_user: UserItemResponse = Depends(UserService().get_current_user)):
     return current_user
 
-@router.put('/info', dependencies=[Depends(login_required)])
+@router.put('/me', dependencies=[Depends(login_required)])
 def update_me(request: UserUpdateRequest, current_user: UserItemResponse = Depends(UserService().get_current_user)):
     UserService.update_current_user(data=request, current_user=current_user)
 
@@ -24,3 +24,4 @@ def get_list_users():
     return {
         'users': users
     }
+
