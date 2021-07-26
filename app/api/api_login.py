@@ -15,7 +15,7 @@ class LoginRequest(BaseModel):
 def login(request: LoginRequest):
     user = UserService.authentication(username=request.username, password=request.password)
     if not user:
-        raise HTTPException(status_code=400, detail='Incorrect email or password')
+        raise HTTPException(status_code=400, detail='Incorrect username or password')
     return Token(
         access_token=create_access_token(user_id=user['id'])
     )

@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.db.base import mysql
 from app.schemas.sche_token import TokenPayload
-from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest, UserItemResponse, UpdatePermissionRequest
+from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest, UserItemResponse
 
 
 class UserService(object):
@@ -43,13 +43,7 @@ class UserService(object):
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Could not validate credentials",
             )
-        cursor = mysql.cursor()
-        query = 'select * from users where id = %s'
-        cursor.execute(query, token_data.user_id, )
-        user = cursor.fetchone()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-        return user
+        return UserService.get_user_by_id(user_id=token_data.user_id)
 
     @staticmethod
     def is_exist_user(username: str):
@@ -93,11 +87,27 @@ class UserService(object):
         mysql.commit()
 
     @staticmethod
-    def update_permission(data: UpdatePermissionRequest, current_user: UserItemResponse):
-        role = UserService.is_exist_user(current_user['username'])['role']
-        if role != 'admin':
-            raise HTTPException(status_code=403, detail="Forbidden action")
+    def get_list_users():
         cursor = mysql.cursor()
-        query = 'update users set role = %s where id = %s;'
-        cursor.execute(query, (data.role, data.user_id,))
+        query = 'select * from users'
+        cursor.execute(query,)
+        users = cursor.fetchall()
+        return users
+
+    @staticmethod
+    def get_user_by_id(user_id: int):
+        cursor = mysql.cursor()
+        query = 'select * from users where id = %s'
+        cursor.execute(query, user_id,)
+        user = cursor.fetchone()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user
+
+    @staticmethod
+    def update_user_role(user_id: int, role: str):
+        cursor = mysql.cursor()
+        query = 'update users set role = %s where id = %s'
+        cursor.execute(query, (role, user_id,))
         mysql.commit()
+

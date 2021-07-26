@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -10,7 +10,7 @@ class UserItemResponse(BaseModel):
     last_name: str
     email: str
     phone_number: str
-
+    role: str
 
 class UserRegisterRequest(BaseModel):
     username: str
@@ -20,7 +20,6 @@ class UserRegisterRequest(BaseModel):
     email: str
     phone_number: str
 
-
 class UserUpdateRequest(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
@@ -28,6 +27,8 @@ class UserUpdateRequest(BaseModel):
     phone_number: Optional[str]
     password: Optional[str]
 
+class ListUsers(BaseModel):
+    users: List[UserItemResponse]
 
 class UpdatePermissionRequest(BaseModel):
     user_id: int
