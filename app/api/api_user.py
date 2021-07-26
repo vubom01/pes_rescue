@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from app.helpers.login_manager import login_required
+from app.helpers.login_manager import login_required, PermissionRequired
 from app.schemas.sche_user import UserItemResponse, UserUpdateRequest, ListUsers
 from app.services.srv_user import UserService
 
@@ -28,3 +28,7 @@ def get_list_users():
 @router.get('/{user_id}', dependencies=[Depends(login_required)], response_model=UserItemResponse)
 def get_user_by_id(user_id: int):
     return UserService.get_user_by_id(user_id=user_id)
+
+@router.put('/{user_id}/role', dependencies=[Depends(PermissionRequired('admin'))])
+def update_user_role(user_id: int, role: str):
+    UserService.update_user_role(user_id=user_id, role=role)
