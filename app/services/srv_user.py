@@ -91,3 +91,11 @@ class UserService(object):
         cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number, data.password,
                                current_user['id'],))
         mysql.commit()
+
+    @staticmethod
+    def get_list_users():
+        cursor = mysql.cursor()
+        query = 'select * from users'
+        cursor.execute(query,)
+        users = cursor.fetchall()
+        return users
