@@ -26,7 +26,11 @@ def get_list_users():
         'users': users
     }
 
-@router.put('/{user_id}', dependencies=[Depends(login_required)])
-def update_permission(request: UpdatePermissionRequest,
-                      current_user: UserItemResponse = Depends(UserService().get_current_user)):
-    UserService.update_permission(data=request, current_user=current_user)
+@router.get('/{user_id}', dependencies=[Depends(login_required)], response_model=UserItemResponse)
+def get_user_by_id(user_id: int):
+    return UserService.get_user_by_id(user_id=user_id)
+
+
+@router.put('/{user_id}/role', dependencies=[Depends(PermissionRequired('admin'))])
+def update_user_role(user_id: int, role: str):
+    UserService.update_user_role(user_id=user_id, role=role)
