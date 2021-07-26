@@ -43,10 +43,7 @@ class UserService(object):
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Could not validate credentials",
             )
-        cursor = mysql.cursor()
-        query = 'select * from users where id = %s'
-        cursor.execute(query, token_data.user_id,)
-        user = cursor.fetchone()
+        user = UserService.get_user_by_id(user_id=token_data.user_id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         return user
@@ -99,3 +96,13 @@ class UserService(object):
         cursor.execute(query,)
         users = cursor.fetchall()
         return users
+
+    @staticmethod
+    def get_user_by_id(user_id: int):
+        cursor = mysql.cursor()
+        query = 'select * from users where id = %s'
+        cursor.execute(query, user_id,)
+        user = cursor.fetchone()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user
