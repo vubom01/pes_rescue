@@ -43,10 +43,7 @@ class UserService(object):
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Could not validate credentials",
             )
-        user = UserService.get_user_by_id(user_id=token_data.user_id)
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-        return user
+        return UserService.get_user_by_id(user_id=token_data.user_id)
 
     @staticmethod
     def is_exist_user(username: str):
