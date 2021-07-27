@@ -11,12 +11,6 @@ router = APIRouter()
 
 
 @router.post('/images', dependencies=[Depends(PermissionRequired('admin'))])
-def upload_pet_image(pet_id: int, file: UploadFile = File(...)):
-    file_name = " ".join(file.filename.strip().split())
-    file_ext = file_name.split('.')[-1]
-    if file_ext.lower() not in ('jpg', 'png', 'jpeg'):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Can't upload this file",
-        )
-    return PetService.upload_pet_image(pet_id=pet_id, image=file.file)
+def upload_pet_image(pet_id: int, image_base64: str):
+
+    return PetService.upload_pet_image(pet_id=pet_id, image_base64=image_base64)
