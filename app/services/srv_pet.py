@@ -37,4 +37,20 @@ class PetService(object):
         cursor.execute(query, (name, age, color, health_condition, weight, description, species,))
         mysql.commit()
 
+    @staticmethod
+    def get_pet_images(pet_id: int):
+        cursor = mysql.cursor()
+        query = 'select url from pet_images where pet_id = %s'
+        cursor.execute(query, (pet_id,))
+        images = cursor.fetchall()
+        return images
+
+    @staticmethod
+    def get_list_pets():
+        cursor = mysql.cursor()
+        query = 'select * from pets'
+        cursor.execute(query,)
+        pets = cursor.fetchall()
+        return pets
+
 

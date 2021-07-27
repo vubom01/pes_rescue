@@ -38,3 +38,12 @@ def create_pet(name: str = Form(...),
     return {
         "pet_id": pet_id
     }
+@router.get('', dependencies=[Depends(login_required)])
+def get_list_pets():
+    pets = PetService.get_list_pets()
+    for pet in pets:
+        images = PetService.get_pet_images(pet_id=pet.get('id'))
+        pet['images'] = images
+    return {
+        'pets': pets
+    }
