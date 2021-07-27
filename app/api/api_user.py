@@ -1,10 +1,10 @@
 import logging
-from typing import List
 
 from fastapi import APIRouter, Depends
 
-from app.helpers.login_manager import login_required, PermissionRequired
-from app.schemas.sche_user import UserItemResponse, UserUpdateRequest, ListUsers
+from app.helpers.login_manager import PermissionRequired, login_required
+from app.schemas.sche_user import (ListUsers, UserItemResponse,
+                                   UserUpdateRequest)
 from app.services.srv_user import UserService
 
 logger = logging.getLogger()
