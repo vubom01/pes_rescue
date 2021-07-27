@@ -10,7 +10,7 @@ logger = logging.getLogger()
 router = APIRouter()
 
 
-@router.put('/images', dependencies=[Depends(PermissionRequired('admin'))])
+@router.post('/images', dependencies=[Depends(PermissionRequired('admin'))])
 def upload_pet_image(pet_id: int, file: UploadFile = File(...)):
     data = file.file.read()
     if len(data) > 1024 * 1024 * 10:
