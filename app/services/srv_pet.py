@@ -11,7 +11,6 @@ class PetService(object):
         folder = "pet-rescue/" + str(pet_id)
         result = cloudinary.uploader.upload(image, folder=folder)
         cursor = mysql.cursor()
-        print(result.get('url'))
         query = 'insert into pet_images (pet_id, url) values (%s,%s);'
         cursor.execute(query, (pet_id, result.get('url'),))
         mysql.commit()
