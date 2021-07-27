@@ -20,6 +20,13 @@ class PetService(object):
         }
 
     @staticmethod
+    def delete_image(url: str):
+        cursor = mysql.cursor()
+        query = 'delete from pet_images where url = %s'
+        cursor.execute(query, (url,))
+        mysql.commit()
+
+    @staticmethod
     def is_exist_pet(name: str):
         cursor = mysql.cursor()
         query = 'select * from pets where name = %s'
