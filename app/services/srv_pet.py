@@ -10,9 +10,31 @@ class PetService(object):
     def upload_pet_image(pet_id: int, image: File):
         folder = "pet-rescue/" + str(pet_id)
         result = cloudinary.uploader.upload(image, folder=folder)
+        url = result.get('url')
         cursor = mysql.cursor()
         query = 'insert into pet_images (pet_id, url) values (%s,%s);'
-        cursor.execute(query, (pet_id, result.get('url'),))
+        cursor.execute(query, (pet_id, url,))
+        mysql.commit()
+        return {
+            'url': url
+        }
+
+    @staticmethod
+    def is_exist_pet(name: str):
+        cursor = mysql.cursor()
+        query = 'select * from pets where name = %s'
+        cursor.execute(query, (name,))
+        pet = cursor.fetchone()
+        if not pet:
+            return None
+        return pet
+
+    @staticmethod
+    def create_pet(name: str, age: int, color: str, health_condition: str, weight: float, description: str, species: str):
+        cursor = mysql.cursor()
+        query = 'insert into pets (name, age, color, health_condition, weight, description, species)' \
+                'values (%s, %s, %s, %s, %s, %s, %s)'
+        cursor.execute(query, (name, age, color, health_condition, weight, description, species,))
         mysql.commit()
 
     @staticmethod
