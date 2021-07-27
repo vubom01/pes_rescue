@@ -58,7 +58,7 @@ def get_pet_by_id(pet_id: int):
     pet['images'] = PetService.get_pet_images(pet_id=pet_id)
     return pet
 
-@router.put('/{pet_id}')
+@router.put('/{pet_id}', dependencies=[Depends(PermissionRequired('admin'))])
 def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
     pet = get_pet_by_id(pet_id=pet_id)
 
@@ -83,3 +83,4 @@ def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
         pet_info.species = pet.get('species')
 
     PetService.update_pet_info(pet_id=pet_id, data=pet_info)
+
