@@ -50,6 +50,26 @@ def get_list_pets():
         'pets': pets
     }
 
+@router.get('/cats', dependencies=[Depends(login_required)])
+def get_list_cats():
+    pets = PetService.get_pet_by_species(species='cat')
+    for pet in pets:
+        images = PetService.get_pet_images(pet_id=pet.get('id'))
+        pet['images'] = images
+    return {
+        'cats': pets
+    }
+
+@router.get('/dogs', dependencies=[Depends(login_required)])
+def get_list_cats():
+    pets = PetService.get_pet_by_species(species='dog')
+    for pet in pets:
+        images = PetService.get_pet_images(pet_id=pet.get('id'))
+        pet['images'] = images
+    return {
+        'dogs': pets
+    }
+
 @router.get('/{pet_id}', dependencies=[Depends(login_required)])
 def get_pet_by_id(pet_id: int):
     pet = PetService.get_pet_by_id(pet_id=pet_id)

@@ -78,3 +78,11 @@ class PetService(object):
         cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
                                data.description, data.species, pet_id,))
         mysql.commit()
+
+    @staticmethod
+    def get_pet_by_species(species: str):
+        cursor = mysql.cursor()
+        query = 'select * from pets where species = %s'
+        cursor.execute(query, (species,))
+        pets = cursor.fetchall()
+        return pets
