@@ -60,4 +60,11 @@ class PetService(object):
         pets = cursor.fetchall()
         return pets
 
+    @staticmethod
+    def get_pet_by_id(pet_id: int):
+        cursor = mysql.cursor()
+        query = 'select * from pets where id = %s'
+        cursor.execute(query, (pet_id,))
+        pet = cursor.fetchone()
+        return pet
 

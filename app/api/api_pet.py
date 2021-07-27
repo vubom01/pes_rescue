@@ -42,6 +42,7 @@ def create_pet(name: str = Form(...),
     return {
         "pet_id": pet_id
     }
+
 @router.get('', dependencies=[Depends(login_required)])
 def get_list_pets():
     pets = PetService.get_list_pets()
@@ -51,3 +52,9 @@ def get_list_pets():
     return {
         'pets': pets
     }
+
+@router.get('/{pet_id}', dependencies=[Depends(login_required)])
+def get_pet_by_id(pet_id: int):
+    pet = PetService.get_pet_by_id(pet_id=pet_id)
+    pet['images'] = PetService.get_pet_images(pet_id=pet_id)
+    return pet
