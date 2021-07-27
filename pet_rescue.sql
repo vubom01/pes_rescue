@@ -87,7 +87,7 @@ DROP TABLE IF EXISTS `pet_images`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pet_images` (
   `pet_id` int NOT NULL AUTO_INCREMENT,
-  `file` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
   PRIMARY KEY (`pet_id`),
   CONSTRAINT `fk_image_pet` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
