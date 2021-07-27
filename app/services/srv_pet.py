@@ -9,7 +9,7 @@ from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.db.base import mysql
 from app.schemas.sche_token import TokenPayload
-from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest, UserItemResponse, UpdatePermissionRequest
+from app.schemas.sche_user import UserRegisterRequest, UserUpdateRequest, UserItemResponse
 
 
 class PetService(object):

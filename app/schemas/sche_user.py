@@ -29,6 +29,3 @@ class UserUpdateRequest(BaseModel):
 class ListUsers(BaseModel):
     users: List[UserItemResponse]
 
-class UpdatePermissionRequest(BaseModel):
-    user_id: int
-    role: str
