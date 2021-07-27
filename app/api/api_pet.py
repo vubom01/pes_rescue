@@ -18,7 +18,7 @@ def upload_pet_image(pet_id: int, file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail='Can not upload file ' + file.filename)
     return PetService.upload_pet_image(pet_id=pet_id, image=file.file)
 
-@router.post('')
+@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
 def create_pet(name: str = Form(...),
                age: int = Form(...),
                color: str = Form(...),
