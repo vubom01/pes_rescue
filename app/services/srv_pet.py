@@ -6,7 +6,7 @@ class PetService(object):
 
     @staticmethod
     def upload_pet_image(pet_id: int, image_base64: str):
-        image = "data:image/png;base64," + image_base64
+        image = "data:image/jpg;base64," + image_base64
         folder = "pet-rescue/" + str(pet_id)
         result = cloudinary.uploader.upload(image, folder=folder)
         return {
