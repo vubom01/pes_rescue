@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from starlette import status
 
 from app.helpers.login_manager import PermissionRequired, login_required
-from app.schemas.sche_pet import ListPets
 from app.services.srv_pet import PetService
 
 logger = logging.getLogger()
