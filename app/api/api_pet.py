@@ -12,12 +12,6 @@ router = APIRouter()
 
 @router.post('/images', dependencies=[Depends(PermissionRequired('admin'))])
 def upload_pet_image(pet_id: int, file: UploadFile = File(...)):
-    data = file.file.read()
-    if len(data) > 1024 * 1024 * 10:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"File too large",
-        )
     file_name = " ".join(file.filename.strip().split())
     file_ext = file_name.split('.')[-1]
     if file_ext.lower() not in ('jpg', 'png', 'jpeg'):
