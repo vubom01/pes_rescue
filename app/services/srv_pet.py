@@ -2,6 +2,7 @@ import cloudinary.uploader
 from fastapi import File
 
 from app.db.base import mysql
+from app.schemas.sche_pet import PetInfoRequest
 
 
 class PetService(object):
@@ -37,11 +38,12 @@ class PetService(object):
         return pet
 
     @staticmethod
-    def create_pet(name: str, age: int, color: str, health_condition: str, weight: float, description: str, species: str):
+    def create_pet(data: PetInfoRequest):
         cursor = mysql.cursor()
         query = 'insert into pets (name, age, color, health_condition, weight, description, species)' \
                 'values (%s, %s, %s, %s, %s, %s, %s)'
-        cursor.execute(query, (name, age, color, health_condition, weight, description, species,))
+        cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
+                               data.description, data.species,))
         mysql.commit()
 
     @staticmethod
@@ -68,3 +70,11 @@ class PetService(object):
         pet = cursor.fetchone()
         return pet
 
+    @staticmethod
+    def update_pet_info(pet_id: int, data: PetInfoRequest):
+        cursor = mysql.cursor()
+        query = 'update pets set name = %s, age = %s, color = %s, health_condition = %s, ' \
+                'weight = %s, description = %s, species = %s where id = %s'
+        cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
+                               data.description, data.species, pet_id,))
+        mysql.commit()
