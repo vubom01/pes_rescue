@@ -14,4 +14,12 @@ router = APIRouter()
 def upload_pet_image(pet_id: int, file: UploadFile = File(...)):
     return PetService.upload_pet_image(pet_id=pet_id, image=file.file)
 
-
+@router.post('', dependencies=[Depends(login_required)])
+def get_list_pets():
+    pets = PetService.get_list_pets()
+    for pet in pets:
+        images = PetService.get_pet_images(pet_id=pet.get('id'))
+        pet['images'] = images
+    return {
+        'pets': pets
+    }
