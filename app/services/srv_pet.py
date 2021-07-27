@@ -1,14 +1,18 @@
 import cloudinary.uploader
 from fastapi import File
 
+from app.db.base import mysql
+
 
 class PetService(object):
 
     @staticmethod
-    def upload_pet_image(pet_id: int, image_base64: str):
-        image = "data:image/jpg;base64," + image_base64
+    def upload_pet_image(pet_id: int, image: File):
         folder = "pet-rescue/" + str(pet_id)
         result = cloudinary.uploader.upload(image, folder=folder)
-        return {
-            "url": result.get('url')
-        }
+        cursor = mysql.cursor()
+        query = 'insert into pet_images (pet_id, url) values (%s,%s);'
+        cursor.execute(query, (pet_id, result.get('url'),))
+        mysql.commit()
+
+
