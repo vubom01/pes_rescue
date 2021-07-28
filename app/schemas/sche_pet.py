@@ -1,18 +1,14 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
 
-class PetItemResponse(BaseModel):
-    name: str
-    age: str
-    color: str
-    health_condition: str
-    weight: float
-    species: str
-    url: str
+class PetInfoRequest(BaseModel):
+    name: Optional[str]
+    age: Optional[str]
+    color: Optional[str]
+    health_condition: Optional[str]
+    weight: Optional[float]
     description: Optional[str]
+    species: Optional[str]
 
-
-class ListPets(BaseModel):
-    users: List[PetItemResponse]
