@@ -40,29 +40,29 @@ def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[dat
     list_users = UserService.get_list_volunteers()
     users = []
     for user in list_users:
-        work_schedule = WorkScheduleService.get_list_work_schedule_by_user_id(user_id=user.get('id'),
-                                                                              start_at=start_at, end_at=end_at)
-        users.append({
-            'id': user.get('id'),
-            'full_name': user.get('first_name') + ' ' + user.get('last_name'),
-            'work_schedule': work_schedule
-        })
+        u = WorkScheduleService.get_user_work_schedule(user_id=user.get('id'), start_at=start_at, end_at=end_at)
+        if u.get('id') is None:
+            u['id'] = user.get('id')
+            u['full_name'] = user.get('first_name') + ' ' + user.get('last_name')
+            u['total_shift'] = 0
+        users.append(u)
     return {
         'users': users
     }
 
 @router.get('/{user_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
-    user = UserService.get_user_by_id(user_id=user_id)
-    if user.get('role') != 'volunteer':
+    check_user = UserService.get_user_by_id(user_id=user_id)
+    if check_user.get('role') != 'volunteer':
         raise HTTPException(status_code=400, detail="User is not volunteer")
-    work_schedule = WorkScheduleService.get_list_work_schedule_by_user_id(user_id=user.get('id'),
-                                                                          start_at=start_at, end_at=end_at)
-    return {
-        'id': user.get('id'),
-        'full_name': user.get('first_name') + ' ' + user.get('last_name'),
-        'work_schedule': work_schedule
-    }
+    user = WorkScheduleService.get_user_work_schedule(user_id=user_id, start_at=start_at, end_at=end_at)
+    if user.get('id') is None:
+        user['id'] = check_user.get('id')
+        user['full_name'] = check_user.get('first_name') + ' ' + check_user.get('last_name')
+        user['total_shift'] = 0
+    user['work_schedule'] = WorkScheduleService.get_list_work_schedule_by_user_id(user_id=user_id,
+                                                                                  start_at=start_at, end_at=end_at)
+    return user
 
 @router.put('/{user_id}', dependencies=[Depends(PermissionRequired("admin"))])
 def confirm_work_schedule(user_id: int, data: ConfirmWorkSchedule):
