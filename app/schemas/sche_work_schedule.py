@@ -3,7 +3,7 @@ from datetime import date
 from pydantic import BaseModel
 
 
-class WorkScheduleRegister(BaseModel):
+class WorkSchedule(BaseModel):
     working_day: date
     working_shift: int
 
