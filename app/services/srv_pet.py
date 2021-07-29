@@ -21,10 +21,10 @@ class PetService(object):
         }
 
     @staticmethod
-    def delete_image(url: str):
+    def delete_image(pet_id: int, url: str):
         cursor = mysql.cursor()
-        query = 'delete from pet_images where url = %s'
-        cursor.execute(query, (url,))
+        query = 'delete from pet_images where pet_id = %s and url = %s'
+        cursor.execute(query, (pet_id, url,))
         mysql.commit()
 
     @staticmethod
