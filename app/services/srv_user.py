@@ -96,6 +96,14 @@ class UserService(object):
         return users
 
     @staticmethod
+    def get_list_volunteers():
+        cursor = mysql.cursor()
+        query = 'select * from users where role = "volunteer"'
+        cursor.execute(query,)
+        users = cursor.fetchall()
+        return users
+
+    @staticmethod
     def get_user_by_id(user_id: int):
         cursor = mysql.cursor()
         query = 'select * from users where id = %s'
