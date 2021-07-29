@@ -11,7 +11,7 @@ from app.services.srv_work_schedule import WorkScheduleService
 logger = logging.getLogger()
 router = APIRouter()
 
-@router.post('/{user_id}', dependencies=[Depends(PermissionRequired('volunteer'))])
+@router.post('', dependencies=[Depends(PermissionRequired('volunteer'))])
 def register_work_schedule(request: WorkScheduleRegister,
                            current_user: UserItemResponse = Depends(UserService().get_current_user)):
     res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
