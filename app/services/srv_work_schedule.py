@@ -26,8 +26,8 @@ class WorkScheduleService(object):
     @staticmethod
     def confirm_work_schedule(user_id: int, data: ConfirmWorkSchedule):
         cursor = mysql.cursor()
-        query = 'UPDATE work_schedule SET status = %s where user_id = %s and working_day = %s ;'
-        cursor.execute(query, (data.status, user_id, data.working_day,))
+        query = 'UPDATE work_schedule SET status = %s where user_id = %s and working_day = %s'
+        cursor.execute(query, (data.status, user_id, data.working_day))
         mysql.commit()
 
     @staticmethod

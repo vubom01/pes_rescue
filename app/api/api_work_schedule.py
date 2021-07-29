@@ -6,7 +6,8 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
 from app.schemas.sche_user import UserItemResponse
-from app.schemas.sche_work_schedule import WorkSchedule, WorkingDay, ConfirmWorkSchedule
+from app.schemas.sche_work_schedule import (ConfirmWorkSchedule, WorkingDay,
+                                            WorkSchedule)
 from app.services.srv_user import UserService
 from app.services.srv_work_schedule import WorkScheduleService
 
@@ -63,6 +64,9 @@ def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, 
         'work_schedule': work_schedule
     }
 
-@router.put('/confirm/{user_id}', dependencies=[Depends(PermissionRequired("admin"))])
+@router.put('/{user_id}', dependencies=[Depends(PermissionRequired("admin"))])
 def confirm_work_schedule(user_id: int, data: ConfirmWorkSchedule):
+    user = UserService.get_user_by_id(user_id=user_id)
+    if user.get('role') != 'volunteer':
+        raise HTTPException(status_code=400, detail="User is not volunteer")
     return WorkScheduleService.confirm_work_schedule(user_id=user_id, data=data)
