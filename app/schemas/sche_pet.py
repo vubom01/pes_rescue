@@ -12,3 +12,5 @@ class PetInfoRequest(BaseModel):
     description: Optional[str]
     species: Optional[str]
 
+class Url(BaseModel):
+    url: str

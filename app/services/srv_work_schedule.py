@@ -29,3 +29,18 @@ class WorkScheduleService(object):
         query = 'UPDATE work_schedule SET status = %s where user_id = %s and working_day = %s ;'
         cursor.execute(query, (data.status, user_id, data.working_day,))
         mysql.commit()
+
+    @staticmethod
+    def delete_work_schedule(user_id: int, working_day: date):
+        cursor = mysql.cursor()
+        query = 'delete from work_schedule where user_id = %s and working_day = %s'
+        cursor.execute(query, (user_id, working_day))
+        mysql.commit()
+
+    @staticmethod
+    def update_work_schedule(user_id: int, data: WorkSchedule):
+        cursor = mysql.cursor()
+        query = 'update work_schedule set working_shift = %s where user_id = %s and working_day = %s'
+        cursor.execute(query, (data.working_shift, user_id, data.working_day))
+        mysql.commit()
+

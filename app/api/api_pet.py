@@ -1,33 +1,15 @@
 import logging
-from typing import List, Optional
+from typing import List
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 from app.helpers.login_manager import PermissionRequired, login_required
-from app.schemas.sche_pet import PetInfoRequest
+from app.schemas.sche_pet import PetInfoRequest, Url
 from app.services.srv_pet import PetService
 
 logger = logging.getLogger()
 router = APIRouter()
 
-
-@router.post('/images', dependencies=[Depends(PermissionRequired('admin'))])
-def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
-    get_pet_by_id(pet_id=pet_id)
-    urls = []
-    for image in images:
-        file_name = " ".join(image.filename.strip().split())
-        file_ext = file_name.split('.')[-1]
-        if file_ext.lower() not in ('jpg', 'png', 'jpeg'):
-            raise HTTPException(status_code=400, detail='Can not upload file ' + image.filename)
-        urls.append(PetService.upload_pet_image(pet_id=pet_id, image=image.file))
-    return {
-        'urls': urls
-    }
-
-@router.delete('/images', dependencies=[Depends(PermissionRequired('admin'))])
-def delete_image(url: str):
-    PetService.delete_image(url=url)
 
 @router.post('', dependencies=[Depends(PermissionRequired('admin'))])
 def create_pet(pet_info: PetInfoRequest):
@@ -104,3 +86,20 @@ def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
 
     PetService.update_pet_info(pet_id=pet_id, data=pet_info)
 
+@router.post('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin'))])
+def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
+    get_pet_by_id(pet_id=pet_id)
+    urls = []
+    for image in images:
+        file_name = " ".join(image.filename.strip().split())
+        file_ext = file_name.split('.')[-1]
+        if file_ext.lower() not in ('jpg', 'png', 'jpeg'):
+            raise HTTPException(status_code=400, detail='Can not upload file ' + image.filename)
+        urls.append(PetService.upload_pet_image(pet_id=pet_id, image=image.file))
+    return {
+        'urls': urls
+    }
+
+@router.delete('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin'))])
+def delete_image(pet_id: int, req: Url):
+    PetService.delete_image(pet_id=pet_id, url=req.url)
