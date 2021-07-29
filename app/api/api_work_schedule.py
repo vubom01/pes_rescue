@@ -49,3 +49,16 @@ def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[dat
     return {
         'users': users
     }
+
+@router.get('/{user_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
+    user = UserService.get_user_by_id(user_id=user_id)
+    if user.get('role') != 'volunteer':
+        raise HTTPException(status_code=400, detail="User is not volunteer")
+    work_schedule = WorkScheduleService.get_list_work_schedule_by_user_id(user_id=user.get('id'),
+                                                                          start_at=start_at, end_at=end_at)
+    return {
+        'id': user.get('id'),
+        'full_name': user.get('first_name') + ' ' + user.get('last_name'),
+        'work_schedule': work_schedule
+    }
