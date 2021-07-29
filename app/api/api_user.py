@@ -27,6 +27,13 @@ def get_list_users():
         'users': users
     }
 
+@router.get('/volunteers', dependencies=[Depends(login_required)], response_model=ListUsers)
+def get_list_volunteers():
+    users = UserService.get_list_volunteers()
+    return {
+        'users': users
+    }
+
 @router.get('/{user_id}', dependencies=[Depends(login_required)], response_model=UserItemResponse)
 def get_user_by_id(user_id: int):
     return UserService.get_user_by_id(user_id=user_id)
