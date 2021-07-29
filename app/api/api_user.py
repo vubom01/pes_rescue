@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends
+from pydantic import BaseModel
 
 from app.helpers.login_manager import PermissionRequired, login_required
 from app.schemas.sche_user import (ListUsers, UserItemResponse,
@@ -9,6 +10,9 @@ from app.services.srv_user import UserService
 
 logger = logging.getLogger()
 router = APIRouter()
+
+class Role(BaseModel):
+    role: str
 
 @router.get('/me', dependencies=[Depends(login_required)], response_model=UserItemResponse)
 def detail_me(current_user: UserItemResponse = Depends(UserService().get_current_user)):
@@ -30,5 +34,5 @@ def get_user_by_id(user_id: int):
     return UserService.get_user_by_id(user_id=user_id)
 
 @router.put('/{user_id}/role', dependencies=[Depends(PermissionRequired('admin'))])
-def update_user_role(user_id: int, role: str):
-    UserService.update_user_role(user_id=user_id, role=role)
+def update_user_role(user_id: int, req: Role):
+    UserService.update_user_role(user_id=user_id, role=req.role)
