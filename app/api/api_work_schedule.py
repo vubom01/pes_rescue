@@ -1,4 +1,6 @@
 import logging
+from datetime import date
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -32,3 +34,18 @@ def update_work_schedule(request: WorkSchedule,
         raise HTTPException(status_code=400, detail="You don't have registered up for the work schedule for this day")
     WorkScheduleService.update_work_schedule(user_id=current_user.get('id'), data=request)
 
+@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[date] = None):
+    list_users = UserService.get_list_volunteers()
+    users = []
+    for user in list_users:
+        work_schedule = WorkScheduleService.get_list_work_schedule_by_user_id(user_id=user.get('id'),
+                                                                              start_at=start_at, end_at=end_at)
+        users.append({
+            'id': user.get('id'),
+            'full_name': user.get('first_name') + ' ' + user.get('last_name'),
+            'work_schedule': work_schedule
+        })
+    return {
+        'users': users
+    }
