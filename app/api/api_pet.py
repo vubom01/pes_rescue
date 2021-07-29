@@ -1,7 +1,8 @@
 import logging
-from typing import List, Optional
+from typing import List
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from pydantic import BaseModel
 
 from app.helpers.login_manager import PermissionRequired, login_required
 from app.schemas.sche_pet import PetInfoRequest
@@ -9,6 +10,9 @@ from app.services.srv_pet import PetService
 
 logger = logging.getLogger()
 router = APIRouter()
+
+class Url(BaseModel):
+    url: str
 
 
 @router.post('', dependencies=[Depends(PermissionRequired('admin'))])
@@ -101,5 +105,5 @@ def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
     }
 
 @router.delete('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin'))])
-def delete_image(pet_id: int, url: str):
-    PetService.delete_image(pet_id=pet_id, url=url)
+def delete_image(pet_id: int, req: Url):
+    PetService.delete_image(pet_id=pet_id, url=req.url)
