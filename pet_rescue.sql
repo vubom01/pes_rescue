@@ -87,7 +87,9 @@ DROP TABLE IF EXISTS `pet_images`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pet_images` (
   `pet_id` int NOT NULL,
-  `url` varchar(255) NOT NULL
+  `url` varchar(255) NOT NULL,
+  KEY `fk_image_pet_idx` (`pet_id`),
+  CONSTRAINT `fk_image_pet` FOREIGN KEY (`pet_id`) REFERENCES `pets` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -97,7 +99,7 @@ CREATE TABLE `pet_images` (
 
 LOCK TABLES `pet_images` WRITE;
 /*!40000 ALTER TABLE `pet_images` DISABLE KEYS */;
-INSERT INTO `pet_images` VALUES (1,'https://www.facebook.com');
+INSERT INTO `pet_images` VALUES (1,'https://www.facebook.com'),(1,'http://res.cloudinary.com/pet-rescue/image/upload/v1627379486/pet-rescue/1/dduj9m1ajy7m6rrarzug.jpg');
 /*!40000 ALTER TABLE `pet_images` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +176,7 @@ CREATE TABLE `users` (
   `phone_number` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +185,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (2,'test','$2b$12$Bi5b9aGYwlSk0nqGzJnjc.VRBJTXOhe84OZrKe2G5q6GWj8j0kfDC','admin','string','string','string','string');
+INSERT INTO `users` VALUES (2,'test','$2b$12$Bi5b9aGYwlSk0nqGzJnjc.VRBJTXOhe84OZrKe2G5q6GWj8j0kfDC','admin','string','string','string','string'),(3,'huuvuot','$2b$12$SXWdF/8ZHtI434prjAqdFOiHuXKsjmGWbl3UBwjxUgCS54toTuaQW','volunteer','string','string','string','string');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,29 +217,30 @@ LOCK TABLES `veterinarians` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `work_time`
+-- Table structure for table `work_schedule`
 --
 
-DROP TABLE IF EXISTS `work_time`;
+DROP TABLE IF EXISTS `work_schedule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `work_time` (
+CREATE TABLE `work_schedule` (
   `user_id` int NOT NULL,
-  `start_at` int NOT NULL,
-  `end_at` int NOT NULL,
-  `date` date NOT NULL,
+  `working_shift` varchar(255) NOT NULL,
+  `working_day` date NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'registered',
   KEY `fk_user_time_idx` (`user_id`),
-  CONSTRAINT `fk_user_time` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `fk_user_time` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `work_time`
+-- Dumping data for table `work_schedule`
 --
 
-LOCK TABLES `work_time` WRITE;
-/*!40000 ALTER TABLE `work_time` DISABLE KEYS */;
-/*!40000 ALTER TABLE `work_time` ENABLE KEYS */;
+LOCK TABLES `work_schedule` WRITE;
+/*!40000 ALTER TABLE `work_schedule` DISABLE KEYS */;
+INSERT INTO `work_schedule` VALUES (3,'0','2021-03-25','registered'),(3,'0','2021-03-25','registered'),(3,'0','2021-07-28','registered');
+/*!40000 ALTER TABLE `work_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -249,4 +252,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-27 15:45:40
+-- Dump completed on 2021-07-28 21:43:04
