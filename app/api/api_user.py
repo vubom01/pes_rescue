@@ -5,14 +5,12 @@ from pydantic import BaseModel
 
 from app.helpers.login_manager import PermissionRequired, login_required
 from app.schemas.sche_user import (ListUsers, UserItemResponse,
-                                   UserUpdateRequest)
+                                   UserUpdateRequest, Role)
 from app.services.srv_user import UserService
 
 logger = logging.getLogger()
 router = APIRouter()
 
-class Role(BaseModel):
-    role: str
 
 @router.get('/me', dependencies=[Depends(login_required)], response_model=UserItemResponse)
 def detail_me(current_user: UserItemResponse = Depends(UserService().get_current_user)):

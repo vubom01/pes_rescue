@@ -2,17 +2,13 @@ import logging
 from typing import List
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from pydantic import BaseModel
 
 from app.helpers.login_manager import PermissionRequired, login_required
-from app.schemas.sche_pet import PetInfoRequest
+from app.schemas.sche_pet import PetInfoRequest, Url
 from app.services.srv_pet import PetService
 
 logger = logging.getLogger()
 router = APIRouter()
-
-class Url(BaseModel):
-    url: str
 
 
 @router.post('', dependencies=[Depends(PermissionRequired('admin'))])

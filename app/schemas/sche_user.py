@@ -30,3 +30,5 @@ class UserUpdateRequest(BaseModel):
 class ListUsers(BaseModel):
     users: List[UserItemResponse]
 
+class Role(BaseModel):
+    role: str
