@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from app.helpers.login_manager import PermissionRequired, login_required
-from app.schemas.sche_user import (ListUsers, Role, UserItemResponse,
-                                   UserUpdateRequest)
+from app.schemas.sche_user import (ListUsers, UserItemResponse,
+                                   UserUpdateRequest, Role)
 from app.services.srv_user import UserService
 
 logger = logging.getLogger()
