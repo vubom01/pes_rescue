@@ -17,8 +17,15 @@ class WorkScheduleService(object):
     def is_exist_work_schedule(user_id: int, working_day: date):
         cursor = mysql.cursor()
         query = 'select * from work_schedule where user_id = %s and working_day = %s'
-        cursor.execute(query, (user_id, working_day,))
+        cursor.execute(query, (user_id, working_day))
         res = cursor.fetchone()
         if not res:
             return None
         return res
+
+    @staticmethod
+    def delete_work_schedule(user_id: int, working_day: date):
+        cursor = mysql.cursor()
+        query = 'delete from work_schedule where user_id = %s and working_day = %s'
+        cursor.execute(query, (user_id, working_day))
+        mysql.commit()

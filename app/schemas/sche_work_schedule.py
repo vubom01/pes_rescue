@@ -6,3 +6,6 @@ from pydantic import BaseModel
 class WorkScheduleRegister(BaseModel):
     working_day: date
     working_shift: int
+
+class WorkingDay(BaseModel):
+    working_day: date
