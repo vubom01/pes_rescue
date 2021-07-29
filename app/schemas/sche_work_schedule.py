@@ -9,3 +9,7 @@ class WorkSchedule(BaseModel):
 
 class WorkingDay(BaseModel):
     working_day: date
+
+class ConfirmWorkSchedule(BaseModel):
+    working_day: date
+    status: str
