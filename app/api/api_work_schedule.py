@@ -4,8 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
 from app.schemas.sche_user import UserItemResponse
-from app.schemas.sche_work_schedule import WorkScheduleRegister, ConfirmWorkSchedule
-from app.schemas.sche_work_schedule import WorkSchedule, WorkingDay
+from app.schemas.sche_work_schedule import WorkSchedule, WorkingDay, ConfirmWorkSchedule
 from app.services.srv_user import UserService
 from app.services.srv_work_schedule import WorkScheduleService
 
@@ -33,3 +32,6 @@ def update_work_schedule(request: WorkSchedule,
         raise HTTPException(status_code=400, detail="You don't have registered up for the work schedule for this day")
     WorkScheduleService.update_work_schedule(user_id=current_user.get('id'), data=request)
 
+@router.put('/confirm/{user_id}', dependencies=[Depends(PermissionRequired("admin"))])
+def confirm_work_schedule(user_id: int, data: ConfirmWorkSchedule):
+    return WorkScheduleService.confirm_work_schedule(user_id=user_id, data=data)

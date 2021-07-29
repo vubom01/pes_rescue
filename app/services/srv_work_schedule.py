@@ -1,13 +1,13 @@
 from datetime import date
 
 from app.db.base import mysql
-from app.schemas.sche_work_schedule import WorkScheduleRegister, ConfirmWorkSchedule
+from app.schemas.sche_work_schedule import ConfirmWorkSchedule, WorkSchedule
 
 
 class WorkScheduleService(object):
 
     @staticmethod
-    def register_work_schedule(user_id: int, data: WorkScheduleRegister):
+    def register_work_schedule(user_id: int, data: WorkSchedule):
         cursor = mysql.cursor()
         query = 'insert into work_schedule (user_id, working_day, working_shift) values (%s, %s, %s)'
         cursor.execute(query, (user_id, data.working_day, data.working_shift))
