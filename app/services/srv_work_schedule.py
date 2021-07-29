@@ -1,7 +1,7 @@
 from datetime import date
 
 from app.db.base import mysql
-from app.schemas.sche_work_schedule import WorkScheduleRegister
+from app.schemas.sche_work_schedule import WorkScheduleRegister, ConfirmWorkSchedule
 
 
 class WorkScheduleService(object):
@@ -22,3 +22,10 @@ class WorkScheduleService(object):
         if not res:
             return None
         return res
+
+    @staticmethod
+    def confirm_working_time(user_id: int, data: ConfirmWorkSchedule):
+        cursor = mysql.cursor()
+        query = 'UPDATE work_schedule SET status = %s where user_id = %s and working_day = %s ;'
+        cursor.execute(query, (data.status, user_id, data.working_day,))
+        mysql.commit()
