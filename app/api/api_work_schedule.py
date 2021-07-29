@@ -28,7 +28,7 @@ def delete_work_schedule(request: WorkingDay,
 def update_work_schedule(request: WorkSchedule,
                          current_user: UserItemResponse = Depends(UserService().get_current_user)):
     res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
-    print(res)
     if res is None:
         raise HTTPException(status_code=400, detail="You don't have registered up for the work schedule for this day")
     WorkScheduleService.update_work_schedule(user_id=current_user.get('id'), data=request)
+
