@@ -1,7 +1,7 @@
 from datetime import date
 
 from app.db.base import mysql
-from app.schemas.sche_work_schedule import WorkScheduleRegister
+from app.schemas.sche_work_schedule import WorkScheduleRegister, WorkScheduleDelete
 
 
 class WorkScheduleService(object):
@@ -22,3 +22,18 @@ class WorkScheduleService(object):
         if not res:
             return None
         return res
+
+    @staticmethod
+    def update_work_schedule(user_id: int, data: WorkScheduleRegister):
+        cursor = mysql.cursor()
+        query = 'UPDATE work_schedule SET working_shift = %s where user_id = %s and working_day = %s ;'
+        cursor.execute(query, (data.working_shift,user_id, data.working_day,))
+        mysql.commit()
+
+    @staticmethod
+    def delete_work_schedule(user_id: int, data: WorkScheduleDelete):
+        cursor = mysql.cursor()
+        query = 'DELETE FROM work_schedule  where user_id = %s and working_day = %s ;'
+        cursor.execute(query, (user_id, data.working_day,))
+        mysql.commit()
+
