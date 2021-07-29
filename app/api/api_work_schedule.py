@@ -13,7 +13,7 @@ from app.services.srv_work_schedule import WorkScheduleService
 logger = logging.getLogger()
 router = APIRouter()
 
-@router.post('', dependencies=[Depends(PermissionRequired('volunteer'))])
+@router.post('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
 def register_work_schedule(request: WorkSchedule,
                            current_user: UserItemResponse = Depends(UserService().get_current_user)):
     res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
@@ -21,12 +21,12 @@ def register_work_schedule(request: WorkSchedule,
         raise HTTPException(status_code=400, detail='You have registered up for the work schedule for this day')
     WorkScheduleService.register_work_schedule(user_id=current_user.get('id'), data=request)
 
-@router.delete('', dependencies=[Depends(PermissionRequired('volunteer'))])
+@router.delete('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
 def delete_work_schedule(request: WorkingDay,
                          current_user: UserItemResponse = Depends(UserService().get_current_user)):
     WorkScheduleService.delete_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
 
-@router.put('', dependencies=[Depends(PermissionRequired('volunteer'))])
+@router.put('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
 def update_work_schedule(request: WorkSchedule,
                          current_user: UserItemResponse = Depends(UserService().get_current_user)):
     res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
@@ -48,6 +48,19 @@ def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[dat
         })
     return {
         'users': users
+    }
+
+@router.get('/{user_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
+    user = UserService.get_user_by_id(user_id=user_id)
+    if user.get('role') != 'volunteer':
+        raise HTTPException(status_code=400, detail="User is not volunteer")
+    work_schedule = WorkScheduleService.get_list_work_schedule_by_user_id(user_id=user.get('id'),
+                                                                          start_at=start_at, end_at=end_at)
+    return {
+        'id': user.get('id'),
+        'full_name': user.get('first_name') + ' ' + user.get('last_name'),
+        'work_schedule': work_schedule
     }
 
 @router.put('/confirm/{user_id}', dependencies=[Depends(PermissionRequired("admin"))])
