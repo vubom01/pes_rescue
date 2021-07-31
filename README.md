@@ -6,6 +6,7 @@ $ virtualenv -p python3 .venv
 $ source .venv/bin/activate (Ubuntu)
   .venv\Scripts\activate (Windows)
 $ pip install -r requirements.txt
+$ uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 2
 ```
 
 ## Connect database 
