@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
@@ -23,33 +23,16 @@ def create_pet(pet_info: PetInfoRequest):
     }
 
 @router.get('', dependencies=[Depends(login_required)])
-def get_list_pets():
-    pets = PetService.get_list_pets()
+def get_list_pets(species: Optional[str] = None):
+    if species is None:
+        pets = PetService.get_list_pets()
+    else:
+        pets = PetService.get_pet_by_species(species=species)
     for pet in pets:
         images = PetService.get_pet_images(pet_id=pet.get('id'))
         pet['images'] = images
     return {
         'pets': pets
-    }
-
-@router.get('/cats', dependencies=[Depends(login_required)])
-def get_list_cats():
-    pets = PetService.get_pet_by_species(species='cat')
-    for pet in pets:
-        images = PetService.get_pet_images(pet_id=pet.get('id'))
-        pet['images'] = images
-    return {
-        'cats': pets
-    }
-
-@router.get('/dogs', dependencies=[Depends(login_required)])
-def get_list_cats():
-    pets = PetService.get_pet_by_species(species='dog')
-    for pet in pets:
-        images = PetService.get_pet_images(pet_id=pet.get('id'))
-        pet['images'] = images
-    return {
-        'dogs': pets
     }
 
 @router.get('/{pet_id}', dependencies=[Depends(login_required)])
