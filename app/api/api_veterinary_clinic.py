@@ -33,8 +33,32 @@ def get_list_veterinary_clinics():
 
 @router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_veterinary_clinic_detail(id: int):
-    return VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
+    clinic = VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
+    if clinic is None:
+        raise HTTPException(status_code=400, detail='Veterinary clinic not found')
+    return clinic
 
 @router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def delete_veterinary_clinic(id: int):
     return VeterinaryClinicService.delete_veterinary_clinic(id=id)
+
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+def update_veterinary_clinic(id: int, req: VeterinaryClinicRequest):
+    exist_clinic = VeterinaryClinicService.is_exist_clinic(name=req.name)
+    if exist_clinic:
+        raise HTTPException(status_code=400, detail='Veterinary clinic already exist')
+
+    clinic = VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
+    if clinic is None:
+        raise HTTPException(status_code=400, detail='Veterinary clinic not found')
+
+    if req.name is None:
+        req.name = clinic.get('name')
+    if req.address is None:
+        req.address = clinic.get('address')
+    if req.phone_number is None:
+        req.phone_number = clinic.get('phone_number')
+    if req.email is None:
+        req.email = clinic.get('email')
+
+    return VeterinaryClinicService.update_veterinary_clinic(id=id, data=req)

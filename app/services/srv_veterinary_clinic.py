@@ -43,3 +43,10 @@ class VeterinaryClinicService(object):
         query = 'delete from veterinary_clinic where id = %s'
         cursor.execute(query, id)
         mysql.commit()
+
+    @staticmethod
+    def update_veterinary_clinic(id: int, data: VeterinaryClinicRequest):
+        cursor = mysql.cursor()
+        query = 'update veterinary_clinic set name = %s, address = %s, phone_number = %s, email = %s where id = %s'
+        cursor.execute(query, (data.name, data.address, data.phone_number, data.email, id))
+        mysql.commit()
