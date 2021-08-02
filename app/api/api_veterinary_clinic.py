@@ -14,7 +14,7 @@ def create_veterinarian(req: VeterinaryClinicRequest):
         raise HTTPException(status_code=400, detail='address khong duoc de trong')
     if req.phone_number is None:
         raise HTTPException(status_code=400, detail='phone_number khong duoc de trong')
-    if  req.email is None:
+    if req.email is None:
         raise HTTPException(status_code=400, detail='email khong duoc de trong')
 
     exist_clinic = VeterinaryClinicService.is_exist_clinic(name=req.name)
