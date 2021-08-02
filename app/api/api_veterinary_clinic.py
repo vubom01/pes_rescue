@@ -34,3 +34,7 @@ def get_list_veterinary_clinics():
 @router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_veterinary_clinic_detail(id: int):
     return VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
+
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+def delete_veterinary_clinic(id: int):
+    return VeterinaryClinicService.delete_veterinary_clinic(id=id)

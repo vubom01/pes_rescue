@@ -36,3 +36,10 @@ class VeterinaryClinicService(object):
         cursor.execute(query, id)
         clinic = cursor.fetchone()
         return clinic
+
+    @staticmethod
+    def delete_veterinary_clinic(id: int):
+        cursor = mysql.cursor()
+        query = 'delete from veterinary_clinic where id = %s'
+        cursor.execute(query, id)
+        mysql.commit()
