@@ -28,3 +28,11 @@ class VeterinaryClinicService(object):
         cursor.execute(query)
         clinics = cursor.fetchall()
         return clinics
+
+    @staticmethod
+    def get_veterinary_clinic_detail(id: int):
+        cursor = mysql.cursor()
+        query = 'select * from veterinary_clinic where id = %s'
+        cursor.execute(query, id)
+        clinic = cursor.fetchone()
+        return clinic

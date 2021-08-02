@@ -25,8 +25,12 @@ def create_veterinarian(req: VeterinaryClinicRequest):
         'veterinary_clinic_id': VeterinaryClinicService.is_exist_clinic(name=req.name).get('id')
     }
 
-@router.get('', dependencies=[Depends(PermissionRequired('admin'))])
+@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_list_veterinary_clinics():
     return {
         'veterinary_clinics': VeterinaryClinicService.get_list_veterinary_clinics()
     }
+
+@router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_veterinary_clinic_detail(id: int):
+    return VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
