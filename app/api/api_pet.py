@@ -24,7 +24,7 @@ def create_pet(pet_info: PetInfoRequest):
         "pet_id": pet_id
     }
 
-@router.get('', dependencies=[Depends(login_required)])
+@router.get('')
 def get_list_pets(species: Optional[str] = None):
     if species is None:
         pets = PetService.get_list_pets()
@@ -37,7 +37,7 @@ def get_list_pets(species: Optional[str] = None):
         'pets': pets
     }
 
-@router.get('/{pet_id}', dependencies=[Depends(login_required)])
+@router.get('/{pet_id}')
 def get_pet_by_id(pet_id: int):
     pet = PetService.get_pet_by_id(pet_id=pet_id)
     if pet is None:
