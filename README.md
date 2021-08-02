@@ -1,4 +1,4 @@
-## Install 
+## Install and run project
 ```
 $ git clone https://github.com/vubom01/pet-rescue
 $ cd pet-rescue
@@ -6,13 +6,7 @@ $ virtualenv -p python3 .venv
 $ source .venv/bin/activate (Ubuntu)
   .venv\Scripts\activate (Windows)
 $ pip install -r requirements.txt
-$ uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 2
-```
-
-## Connect database 
-```
-$ docker build -t {name_image} .
-$ docker run --name {name} --restart unless-stopped -p 3306:3306 -d {name_image}
+$ uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
 ## Cấu trúc project
@@ -26,8 +20,8 @@ $ docker run --name {name} --restart unless-stopped -p 3306:3306 -d {name_image}
 │   ├── services    // Chứa logic CRUD giao tiếp với DB  
 │   └── main.py     // cấu hình chính của toàn bộ project  
 ├── .gitignore  
-├── Dockerfile
-├── pet_rescue.sql  // database
+├── Procfile
 ├── README.md  
-└── requirements.txt
+├── requirements.txt
+└── runtime.txt
   
