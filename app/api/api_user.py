@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
@@ -21,15 +22,11 @@ def update_me(request: UserUpdateRequest, current_user: UserItemResponse = Depen
     UserService.update_current_user(data=request, current_user=current_user)
 
 @router.get('', dependencies=[Depends(login_required)], response_model=ListUsers)
-def get_list_users():
-    users = UserService.get_list_users()
-    return {
-        'users': users
-    }
-
-@router.get('/volunteers', dependencies=[Depends(login_required)], response_model=ListUsers)
-def get_list_volunteers():
-    users = UserService.get_list_volunteers()
+def get_list_users(role: Optional[str] = None):
+    if role is None:
+        users = UserService.get_list_users()
+    else:
+        users = UserService.get_list_users_by_role(role=role)
     return {
         'users': users
     }
