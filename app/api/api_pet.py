@@ -13,6 +13,19 @@ router = APIRouter()
 
 @router.post('', dependencies=[Depends(PermissionRequired('admin'))])
 def create_pet(pet_info: PetInfoRequest):
+    if pet_info.name is None:
+        raise HTTPException(status_code=400, detail='name khong duoc de trong')
+    if pet_info.age is None:
+        raise HTTPException(status_code=400, detail='age khong duoc de trong')
+    if pet_info.color is None:
+        raise HTTPException(status_code=400, detail='color khong duoc de trong')
+    if pet_info.health_condition is None:
+        raise HTTPException(status_code=400, detail='health_condition khong duoc de trong')
+    if pet_info.weight is None:
+        raise HTTPException(status_code=400, detail='weight khong duoc de trong')
+    if pet_info.species is None:
+        raise HTTPException(status_code=400, detail='species khong duoc de trong')
+
     exist_pet = PetService.is_exist_pet(name=pet_info.name)
     if exist_pet:
         raise HTTPException(status_code=400, detail='Pet name is already exist')
