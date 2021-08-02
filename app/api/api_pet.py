@@ -16,6 +16,8 @@ def create_pet(pet_info: PetInfoRequest):
     exist_pet = PetService.is_exist_pet(name=pet_info.name)
     if exist_pet:
         raise HTTPException(status_code=400, detail='Pet name is already exist')
+    if pet_info.species != 'cat' and pet_info.species != 'dog':
+        raise HTTPException(status_code=400, detail='species chỉ nhận các giá trị cat, dog')
     PetService.create_pet(data=pet_info)
     pet_id = PetService.is_exist_pet(name=pet_info.name)['id']
     return {
@@ -66,6 +68,9 @@ def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
         pet_info.description = pet.get('description')
     if pet_info.species is None:
         pet_info.species = pet.get('species')
+
+    if pet_info.species != 'cat' and pet_info.species != 'dog':
+        raise HTTPException(status_code=400, detail='species chỉ nhận các giá trị cat, dog')
 
     PetService.update_pet_info(pet_id=pet_id, data=pet_info)
 

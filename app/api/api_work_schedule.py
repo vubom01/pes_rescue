@@ -20,6 +20,8 @@ def register_work_schedule(request: WorkSchedule,
     res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
     if res:
         raise HTTPException(status_code=400, detail='You have registered up for the work schedule for this day')
+    if request.working_shift != 0 and request.working_shift != 1 and request.working_shift != 2:
+        raise HTTPException(status_code=400, detail='work_shift chỉ nhận các giá trị 0, 1, 2')
     WorkScheduleService.register_work_schedule(user_id=current_user.get('id'), data=request)
 
 @router.delete('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
@@ -33,11 +35,13 @@ def update_work_schedule(request: WorkSchedule,
     res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
     if res is None:
         raise HTTPException(status_code=400, detail="You don't have registered up for the work schedule for this day")
+    if request.working_shift != 0 and request.working_shift != 1 and request.working_shift != 2:
+        raise HTTPException(status_code=400, detail='work_shift chỉ nhận các giá trị 0, 1, 2')
     WorkScheduleService.update_work_schedule(user_id=current_user.get('id'), data=request)
 
 @router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[date] = None):
-    list_users = UserService.get_list_volunteers()
+    list_users = UserService.get_list_users_by_role(role='volunteer')
     users = []
     for user in list_users:
         u = WorkScheduleService.get_user_work_schedule(user_id=user.get('id'), start_at=start_at, end_at=end_at)

@@ -1,8 +1,7 @@
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired, login_required
 from app.schemas.sche_user import (ListUsers, UserItemResponse,
@@ -37,4 +36,6 @@ def get_user_by_id(user_id: int):
 
 @router.put('/{user_id}/role', dependencies=[Depends(PermissionRequired('admin'))])
 def update_user_role(user_id: int, req: Role):
+    if req.role != 'admin' and req.role != 'volunteer' and req.role != 'guest':
+        raise HTTPException(status_code=400, detail='role chỉ nhận các giá trị admin, volunteer, guest')
     UserService.update_user_role(user_id=user_id, role=req.role)
