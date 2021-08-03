@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
-from app.schemas.sche_sponsor import SponsorRequest
+from app.schemas.sche_sponsor import SponsorRequest, SponsorResponse
 from app.services.srv_sponsor import SponsorService
 
 router = APIRouter()
@@ -36,20 +36,22 @@ def get_list_sponsors():
     }
 
 
-@router.get('/{sponsor_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))],
+            response_model=SponsorResponse)
 def get_sponsor_detail(id: int):
     sponsor = SponsorService.get_sponsor_detail(id=id)
+    sponsor['sum_donations'] = SponsorService.get_sum_donations(id=id)
     if sponsor is None:
         raise HTTPException(status_code=400, detail='Sponsor not found')
     return sponsor
 
 
-@router.delete('/{sponsor_id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def delete_sponsor(id: int):
     return SponsorService.delete_sponsor(id=id)
 
 
-@router.put('/{sponsor_id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def update_info_sponsor(id: int, req: SponsorRequest):
     exist_sponsor = SponsorService.is_exist_sponsor(phone_number=req.phone_number)
     if exist_sponsor:

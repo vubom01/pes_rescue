@@ -41,7 +41,7 @@ class SponsorService(object):
         cursor = mysql.cursor()
         query = 'update sponsors set first_name = %s, last_name = %s, address = %s, phone_number = %s, email = %s \
             where id = %s'
-        cursor.execute(query, (data.first_name, data.last_name, data.address, data.phone_number, data.email,id,))
+        cursor.execute(query, (data.first_name, data.last_name, data.address, data.phone_number, data.email, id,))
         mysql.commit()
 
     @staticmethod
@@ -50,3 +50,11 @@ class SponsorService(object):
         query = 'delete from sponsors where id = %s'
         cursor.execute(query, id)
         mysql.commit()
+
+    @staticmethod
+    def get_sum_donations(id: int):
+        cursor = mysql.cursor()
+        query = 'select sum(donations) as sum_donations from donate_detail where sponsor_id = %s'
+        cursor.execute(query, (id,))
+        sum_donations = cursor.fetchone().get('sum_donations')
+        return sum_donations
