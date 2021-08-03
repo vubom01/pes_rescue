@@ -9,12 +9,3 @@ class SponsorRequest(BaseModel):
     address: Optional[str]
     phone_number: Optional[str]
     email: Optional[str]
-
-
-class SponsorResponse(BaseModel):
-    first_name: Optional[str]
-    last_name: Optional[str]
-    address: Optional[str]
-    phone_number: Optional[str]
-    email: Optional[str]
-    sum_donations: int

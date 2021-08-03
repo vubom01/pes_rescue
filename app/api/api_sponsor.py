@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
-from app.schemas.sche_sponsor import SponsorRequest, SponsorResponse
+from app.schemas.sche_sponsor import SponsorRequest
 from app.services.srv_sponsor import SponsorService
 
 router = APIRouter()
@@ -34,8 +34,7 @@ def get_list_sponsors():
         'sponsors': SponsorService.get_list_sponsors()
     }
 
-@router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))],
-            response_model=SponsorResponse)
+@router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_sponsor_detail(id: int):
     sponsor = SponsorService.get_sponsor_detail(id=id)
     if sponsor is None:
@@ -48,7 +47,7 @@ def delete_sponsor(id: int):
 
 @router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def update_info_sponsor(id: int, req: SponsorRequest):
-    exist_sponsor = SponsorService.is_exist_sponsor(phone_number=req.phone_number)
+    exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number)
     if exist_sponsor:
         raise HTTPException(status_code=400, detail='sponsor already exist')
     sponsor = SponsorService.get_sponsor_detail(id=id)
@@ -56,9 +55,9 @@ def update_info_sponsor(id: int, req: SponsorRequest):
         raise HTTPException(status_code=400, detail='Sponsor not found')
 
     if req.first_name is None:
-        req.name = sponsor.get('first_name')
+        req.first_name = sponsor.get('first_name')
     if req.last_name is None:
-        req.name = sponsor.get('last_name')
+        req.last_name = sponsor.get('last_name')
     if req.address is None:
         req.address = sponsor.get('address')
     if req.phone_number is None:
