@@ -18,23 +18,21 @@ def create_sponsor(req: SponsorRequest):
     if req.email is None:
         raise HTTPException(status_code=400, detail='email khong duoc de trong')
     if req.phone_number is None:
-        raise HTTPException(status_code=400, detail='so dien thoai khong duoc de trong')
+        raise HTTPException(status_code=400, detail='phone_number khong duoc de trong')
 
-    exist_sponsor = SponsorService.is_exist_sponsor(phone_number=req.phone_number)
+    exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number).get('id')
     if exist_sponsor:
         raise HTTPException(status_code=400, detail='Sponsor is already exist')
     SponsorService.create_sponsor(data=req)
     return {
-        'sponsor_id': SponsorService.is_exist_sponsor(phone_number=req.phone_number).get('id')
+        'sponsor_id': SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number).get('id')
     }
-
 
 @router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_list_sponsors():
     return {
-        'Sponsors': SponsorService.get_list_sponsors()
+        'sponsors': SponsorService.get_list_sponsors()
     }
-
 
 @router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))],
             response_model=SponsorResponse)
@@ -44,11 +42,9 @@ def get_sponsor_detail(id: int):
         raise HTTPException(status_code=400, detail='Sponsor not found')
     return sponsor
 
-
 @router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def delete_sponsor(id: int):
     return SponsorService.delete_sponsor(id=id)
-
 
 @router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def update_info_sponsor(id: int, req: SponsorRequest):

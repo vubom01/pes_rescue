@@ -4,10 +4,10 @@ from app.schemas.sche_sponsor import SponsorRequest
 
 class SponsorService(object):
     @staticmethod
-    def is_exist_sponsor(phone_number: str):
+    def is_exist_sponsor(email: str, phone_number: str):
         cursor = mysql.cursor()
-        query = 'select * from sponsors where phone_number = %s'
-        cursor.execute(query, (phone_number,))
+        query = 'select * from sponsors where email = %s and phone_number = %s'
+        cursor.execute(query, (email, phone_number))
         sponsor = cursor.fetchone()
         if not sponsor:
             return None
