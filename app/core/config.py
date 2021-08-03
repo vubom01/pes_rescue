@@ -13,5 +13,4 @@ class Settings(BaseSettings):
     SECURITY_ALGORITHM = 'HS256'
 
 
-
 settings = Settings()
