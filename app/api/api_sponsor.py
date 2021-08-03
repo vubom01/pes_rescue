@@ -7,7 +7,7 @@ from app.services.srv_sponsor import SponsorService
 router = APIRouter()
 
 
-@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
 def create_sponsor(req: SponsorRequest):
     if req.first_name is None:
         raise HTTPException(status_code=400, detail='first_name khong duoc de trong')
@@ -40,7 +40,6 @@ def get_list_sponsors():
             response_model=SponsorResponse)
 def get_sponsor_detail(id: int):
     sponsor = SponsorService.get_sponsor_detail(id=id)
-    sponsor['sum_donations'] = SponsorService.get_sum_donations(id=id)
     if sponsor is None:
         raise HTTPException(status_code=400, detail='Sponsor not found')
     return sponsor

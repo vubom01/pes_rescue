@@ -31,7 +31,8 @@ class SponsorService(object):
     @staticmethod
     def get_sponsor_detail(id: int):
         cursor = mysql.cursor()
-        query = 'select * from sponsors where id = %s;'
+        query = 'select s.first_name,s.last_name,s.email,s.phone_number, s.address, sum(d.donations) as sum_donations' \
+                ' from sponsors s inner join donate_detail d on s.id = d.sponsor_id where s.id = %s;'
         cursor.execute(query, (id,))
         sponsor = cursor.fetchone()
         return sponsor
@@ -51,10 +52,4 @@ class SponsorService(object):
         cursor.execute(query, id)
         mysql.commit()
 
-    @staticmethod
-    def get_sum_donations(id: int):
-        cursor = mysql.cursor()
-        query = 'select sum(donations) as sum_donations from donate_detail where sponsor_id = %s'
-        cursor.execute(query, (id,))
-        sum_donations = cursor.fetchone().get('sum_donations')
-        return sum_donations
+
