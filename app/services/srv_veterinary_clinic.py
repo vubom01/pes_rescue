@@ -61,3 +61,24 @@ class VeterinaryClinicService(object):
         cursor.execute(query, (data.pet_id, data.veterinary_clinic_id, date.today(), date.today(), data.weight,
                                data.health_condition, data.description))
         mysql.commit()
+
+    @staticmethod
+    def get_list_health_reports(start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
+
+        cursor = mysql.cursor()
+        query = 'select * from health_report where created_at between %s and %s'
+        cursor.execute(query, (start_at, end_at))
+        health_reports = cursor.fetchall()
+        return health_reports
+
+    @staticmethod
+    def get_health_report_detail(id: int):
+        cursor = mysql.cursor()
+        query = 'select * from health_report where id = %s'
+        cursor.execute(query, id)
+        health_report = cursor.fetchone()
+        return health_report
