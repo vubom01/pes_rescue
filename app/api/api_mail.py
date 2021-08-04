@@ -1,18 +1,17 @@
-from fastapi import FastAPI, BackgroundTasks, UploadFile, File, Form
-from starlette.responses import JSONResponse
+from fastapi import BackgroundTasks
 from fastapi_mail import FastMail, MessageSchema
 from app.schemas.sche_mail import EmailSchema, BodyEmail
 from app.db.base import mail_config
-from fastapi import APIRouter, Depends, HTTPException
-from app.helpers.login_manager import PermissionRequired, login_required
+from fastapi import APIRouter, Depends
+from app.helpers.login_manager import PermissionRequired
 import logging
 
 logger = logging.getLogger()
 router = APIRouter()
 
 
-@router.post("", dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-async def send_mail(background_tasks: BackgroundTasks, email: EmailSchema, body_mail: BodyEmail) -> JSONResponse:
+@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+async def send_mail(background_tasks: BackgroundTasks, email: EmailSchema, body_mail: BodyEmail):
     message = MessageSchema(
         subject=body_mail.subject,
         recipients=email.dict().get("email"),
@@ -20,4 +19,6 @@ async def send_mail(background_tasks: BackgroundTasks, email: EmailSchema, body_
     )
     fm = FastMail(mail_config)
     background_tasks.add_task(fm.send_message, message)
-    return JSONResponse(status_code=200, content={"message": "email has been sent"})
+    return {
+        'message': 'email has been sent'
+    }
