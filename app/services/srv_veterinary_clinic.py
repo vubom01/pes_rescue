@@ -82,3 +82,12 @@ class VeterinaryClinicService(object):
         cursor.execute(query, id)
         health_report = cursor.fetchone()
         return health_report
+
+    @staticmethod
+    def update_health_report(id: int, data: HealthReportRequest):
+        cursor = mysql.cursor()
+        query = 'update health_report set pet_id = %s, veterinary_clinic_id = %s, update_at = %s, weight = %s, ' \
+                'health_condition = %s, description = %s where id = %s'
+        cursor.execute(query, (data.pet_id, data.veterinary_clinic_id, date.today(), data.weight,
+                               data.health_condition, data.description, id))
+        mysql.commit()

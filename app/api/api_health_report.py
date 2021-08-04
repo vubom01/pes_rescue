@@ -48,3 +48,31 @@ def get_health_report_detail(id: int):
         raise HTTPException(status_code=400, detail='Health report not found')
     return health_report
 
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+def update_health_report(id: int, req: HealthReportRequest):
+    health_report = VeterinaryClinicService.get_health_report_detail(id=id)
+    if health_report is None:
+        raise HTTPException(status_code=400, detail='Health report not found')
+
+    if req.pet_id is None:
+        req.pet_id = health_report.get('pet_id')
+    else:
+        pet = PetService.get_pet_by_id(pet_id=req.pet_id)
+        if pet is None:
+            raise HTTPException(status_code=400, detail='Pet not found')
+
+    if req.veterinary_clinic_id is None:
+        req.veterinary_clinic_id = health_report.get('veterinary_clinic_id')
+    else:
+        clinic = VeterinaryClinicService.get_veterinary_clinic_detail(id=req.veterinary_clinic_id)
+        if clinic is None:
+            raise HTTPException(status_code=400, detail='Veterinary clinic not found')
+
+    if req.weight is None:
+        req.weight = health_report.get('weight')
+    if req.health_condition is None:
+        req.health_condition = health_report.get('health_condition')
+    if req.description is None:
+        req.description = health_report.get('description')
+
+    return VeterinaryClinicService.update_health_report(id=id, data=req)
