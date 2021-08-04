@@ -1,5 +1,7 @@
+from datetime import date
+
 from app.db.base import mysql
-from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest
+from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest, HealthReportRequest
 
 
 class VeterinaryClinicService(object):
@@ -49,4 +51,13 @@ class VeterinaryClinicService(object):
         cursor = mysql.cursor()
         query = 'update veterinary_clinic set name = %s, address = %s, phone_number = %s, email = %s where id = %s'
         cursor.execute(query, (data.name, data.address, data.phone_number, data.email, id))
+        mysql.commit()
+
+    @staticmethod
+    def create_health_report(data: HealthReportRequest):
+        cursor = mysql.cursor()
+        query = 'insert into health_report(pet_id, veterinary_clinic_id, created_at, update_at, weight,' \
+                'health_condition, description) values (%s, %s, %s, %s, %s, %s, %s)'
+        cursor.execute(query, (data.pet_id, data.veterinary_clinic_id, date.today(), date.today(), data.weight,
+                               data.health_condition, data.description))
         mysql.commit()
