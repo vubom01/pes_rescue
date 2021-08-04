@@ -20,3 +20,7 @@ def get_donate_detail_by_id(id: int):
     if donate_detail is None:
         raise HTTPException(status_code=400, detail='Donate detail not found')
     return donate_detail
+
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+def delete_donate_detail(id: int):
+    return SponsorService.delete_donate_detail(id=id)

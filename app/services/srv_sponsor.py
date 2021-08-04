@@ -75,3 +75,10 @@ class SponsorService(object):
         cursor.execute(query, id)
         donate_detail = cursor.fetchone()
         return donate_detail
+
+    @staticmethod
+    def delete_donate_detail(id: int):
+        cursor = mysql.cursor()
+        query = 'delete from donate_detail where id = %s'
+        cursor.execute(query, id)
+        mysql.commit()
