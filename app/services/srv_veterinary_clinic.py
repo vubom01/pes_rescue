@@ -100,14 +100,23 @@ class VeterinaryClinicService(object):
         mysql.commit()
 
     @staticmethod
-    def get_list_healthy_report(id: int, start_at: date, end_at: date):
+    def get_list_health_reports_by_pet_id_or_veterinary_clinic_id(pet_id: int, veterinary_clinic_id: int,
+                                                                  start_at: date, end_at: date):
         if start_at is None:
             start_at = '1000-01-01'
         if end_at is None:
             end_at = '3000_12_31'
+
         cursor = mysql.cursor()
-        query = 'select pet_id, created_at, veterinary_clinic_id, health_condition, weight, description from  ' \
-                ' health_report where veterinary_clinic_id = %s and created_at between %s and %s order by created_at;'
-        cursor.execute(query, (id, start_at, end_at,))
-        healthy_reports = cursor.fetchall()
-        return healthy_reports
+        if pet_id is None:
+            query = 'select pet_id, veterinary_clinic_id, created_at, health_condition, weight, description from ' \
+                    'health_report where veterinary_clinic_id = %s and created_at between %s and %s ' \
+                    'order by created_at desc'
+            cursor.execute(query, (veterinary_clinic_id, start_at, end_at))
+        else:
+            query = 'select pet_id, veterinary_clinic_id, created_at, health_condition, weight, description from ' \
+                    'health_report where pet_id = %s and created_at between %s and %s order by created_at desc'
+            cursor.execute(query, (pet_id, start_at, end_at))
+
+        health_reports = cursor.fetchall()
+        return health_reports

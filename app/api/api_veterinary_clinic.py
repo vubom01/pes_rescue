@@ -1,5 +1,6 @@
 import logging
 from datetime import date
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -70,9 +71,16 @@ def update_veterinary_clinic(id: int, req: VeterinaryClinicRequest):
 
     return VeterinaryClinicService.update_veterinary_clinic(id=id, data=req)
 
-@router.get("/{id}/healthy_report", dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def get_list_healthy_report_of_veterinary_clinic(id: int, start_at: date, end_at: date):
+@router.get("/{id}/health_report", dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_list_healthy_reports_of_veterinary_clinic(id: int, start_at: Optional[date] = None,
+                                                  end_at: Optional[date] = None):
     clinic = VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
     if clinic is None:
         raise HTTPException(status_code=400, detail='Veterinary clinic not found')
-    return VeterinaryClinicService.get_list_healthy_report(id=id, start_at=start_at, end_at=end_at)
+    return {
+        'health_reports':
+            VeterinaryClinicService.get_list_health_reports_by_pet_id_or_veterinary_clinic_id(pet_id=None,
+                                                                                              veterinary_clinic_id=id,
+                                                                                              start_at=start_at,
+                                                                                              end_at=end_at)
+    }
