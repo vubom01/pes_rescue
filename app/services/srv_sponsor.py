@@ -1,3 +1,5 @@
+from datetime import date
+
 from app.db.base import mysql
 from app.schemas.sche_sponsor import SponsorRequest
 
@@ -53,4 +55,15 @@ class SponsorService(object):
         cursor.execute(query, id)
         mysql.commit()
 
+    @staticmethod
+    def get_list_donate_detail(start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
 
+        cursor = mysql.cursor()
+        query = 'select * from donate_detail where created_at between %s and %s'
+        cursor.execute(query, (start_at, end_at))
+        donate_details = cursor.fetchall()
+        return donate_details
