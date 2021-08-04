@@ -129,15 +129,16 @@ class SponsorService(object):
     @staticmethod
     def create_donate_detail(sponsor_id: int, data: DonateDetailRequest):
         cursor = mysql.cursor()
-        query = 'insert into donate_detail (sponsor_id, created_at, account_number, transaction_code, donations) ' \
-                'values (%s, %s, %s, %s, %s)'
-        cursor.execute(query, (sponsor_id, date.today(), data.account_number, data.transaction_code, data.donations))
+        query = 'insert into donate_detail (sponsor_id, created_at, update_at, ' \
+                'account_number, transaction_code, donations) values (%s, %s, %s, %s, %s)'
+        cursor.execute(query, (sponsor_id, date.today(), date.today(),
+                               data.account_number, data.transaction_code, data.donations))
         mysql.commit()
 
     @staticmethod
     def update_donate_detail(id: int, data: DonateDetailRequest):
         cursor = mysql.cursor()
-        query = 'update donate_detail set created_at = %s, account_number = %s, transaction_code = %s, donations = %s ' \
+        query = 'update donate_detail set update_at = %s, account_number = %s, transaction_code = %s, donations = %s ' \
                 'where id = %s'
         cursor.execute(query, (date.today(), data.account_number, data.transaction_code, data.donations, id))
         mysql.commit()
