@@ -67,3 +67,11 @@ class SponsorService(object):
         cursor.execute(query, (start_at, end_at))
         donate_details = cursor.fetchall()
         return donate_details
+
+    @staticmethod
+    def get_donate_detail_by_id(id: int):
+        cursor = mysql.cursor()
+        query = 'select * from donate_detail where id = %s'
+        cursor.execute(query, id)
+        donate_detail = cursor.fetchone()
+        return donate_detail
