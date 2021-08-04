@@ -1,3 +1,5 @@
+from datetime import date
+
 import cloudinary.uploader
 from fastapi import File
 
