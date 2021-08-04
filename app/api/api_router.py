@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.api import (api_login, api_pet, api_register, api_sponsor, api_user,
-                     api_veterinary_clinic, api_work_schedule, api_mail)
+from app.api import (api_login, api_mail, api_pet, api_register, api_sponsor,
+                     api_user, api_veterinary_clinic, api_work_schedule)
 
 router = APIRouter()
 

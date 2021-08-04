@@ -1,6 +1,6 @@
 import cloudinary as cloudinary
-import pymysql.cursors
 import fastapi_mail
+import pymysql.cursors
 
 from app.core.config import settings
 

@@ -1,13 +1,12 @@
+import logging
 from typing import List, Optional
 
-from fastapi import BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi_mail import FastMail, MessageSchema
-from pydantic import EmailStr, BaseModel
+from pydantic import BaseModel, EmailStr
 
 from app.db.base import mail_config
-from fastapi import APIRouter, Depends
 from app.helpers.login_manager import PermissionRequired
-import logging
 
 logger = logging.getLogger()
 router = APIRouter()
