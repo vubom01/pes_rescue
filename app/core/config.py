@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     MAIL_USERNAME = 'vuotnh.hrt@gmail.com'
     MAIL_PASSWORD = 'zovlyxhjlmahvesp'
     MAIL_FROM = 'vuotnh.hrt@gmail.com'
-    MAIL_PORT = '587'
+    MAIL_PORT = 587,
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_TLS = True
     MAIL_SSL = False
