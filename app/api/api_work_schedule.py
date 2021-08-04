@@ -32,6 +32,9 @@ def delete_work_schedule(request: WorkingDay,
 @router.put('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
 def update_work_schedule(request: WorkSchedule,
                          current_user: UserItemResponse = Depends(UserService().get_current_user)):
+    if request.working_day is None:
+        raise HTTPException(status_code=400, detail='working_day khong duoc de trong')
+
     res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
     if res is None:
         raise HTTPException(status_code=400, detail="You don't have registered up for the work schedule for this day")
@@ -71,6 +74,8 @@ def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, 
 @router.put('/{user_id}', dependencies=[Depends(PermissionRequired("admin"))])
 def confirm_work_schedule(user_id: int, data: ConfirmWorkSchedule):
     user = UserService.get_user_by_id(user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=400, detail="User not found")
     if user.get('role') != 'volunteer':
         raise HTTPException(status_code=400, detail="User is not volunteer")
     return WorkScheduleService.confirm_work_schedule(user_id=user_id, data=data)

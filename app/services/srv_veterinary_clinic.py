@@ -1,7 +1,7 @@
 from datetime import date
 
 from app.db.base import mysql
-from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest, HealthyReportRequest
+from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest, HealthReportRequest
 
 
 class VeterinaryClinicService(object):
@@ -51,6 +51,52 @@ class VeterinaryClinicService(object):
         cursor = mysql.cursor()
         query = 'update veterinary_clinic set name = %s, address = %s, phone_number = %s, email = %s where id = %s'
         cursor.execute(query, (data.name, data.address, data.phone_number, data.email, id))
+        mysql.commit()
+
+    @staticmethod
+    def create_health_report(data: HealthReportRequest):
+        cursor = mysql.cursor()
+        query = 'insert into health_report(pet_id, veterinary_clinic_id, created_at, update_at, weight,' \
+                'health_condition, description) values (%s, %s, %s, %s, %s, %s, %s)'
+        cursor.execute(query, (data.pet_id, data.veterinary_clinic_id, date.today(), date.today(), data.weight,
+                               data.health_condition, data.description))
+        mysql.commit()
+
+    @staticmethod
+    def get_list_health_reports(start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
+
+        cursor = mysql.cursor()
+        query = 'select * from health_report where created_at between %s and %s order by created_at desc'
+        cursor.execute(query, (start_at, end_at))
+        health_reports = cursor.fetchall()
+        return health_reports
+
+    @staticmethod
+    def get_health_report_detail(id: int):
+        cursor = mysql.cursor()
+        query = 'select * from health_report where id = %s'
+        cursor.execute(query, id)
+        health_report = cursor.fetchone()
+        return health_report
+
+    @staticmethod
+    def update_health_report(id: int, data: HealthReportRequest):
+        cursor = mysql.cursor()
+        query = 'update health_report set pet_id = %s, veterinary_clinic_id = %s, update_at = %s, weight = %s, ' \
+                'health_condition = %s, description = %s where id = %s'
+        cursor.execute(query, (data.pet_id, data.veterinary_clinic_id, date.today(), data.weight,
+                               data.health_condition, data.description, id))
+        mysql.commit()
+
+    @staticmethod
+    def delete_health_report(id: int):
+        cursor = mysql.cursor()
+        query = 'delete from health_report where id = %s'
+        cursor.execute(query, id)
         mysql.commit()
 
     @staticmethod
