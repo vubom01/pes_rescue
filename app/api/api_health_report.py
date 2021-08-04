@@ -76,3 +76,7 @@ def update_health_report(id: int, req: HealthReportRequest):
         req.description = health_report.get('description')
 
     return VeterinaryClinicService.update_health_report(id=id, data=req)
+
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+def delete_health_report(id: int):
+    return VeterinaryClinicService.delete_health_report(id=id)

@@ -91,3 +91,10 @@ class VeterinaryClinicService(object):
         cursor.execute(query, (data.pet_id, data.veterinary_clinic_id, date.today(), data.weight,
                                data.health_condition, data.description, id))
         mysql.commit()
+
+    @staticmethod
+    def delete_health_report(id: int):
+        cursor = mysql.cursor()
+        query = 'delete from health_report where id = %s'
+        cursor.execute(query, id)
+        mysql.commit()
