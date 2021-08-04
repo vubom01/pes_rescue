@@ -6,6 +6,14 @@ from app.schemas.sche_sponsor import SponsorRequest
 
 class SponsorService(object):
     @staticmethod
+    def get_sponsor(id: int):
+        cursor = mysql.cursor()
+        query = 'select * from sponsors where id = %s'
+        cursor.execute(query, id)
+        sponsor = cursor.fetchone()
+        return sponsor
+
+    @staticmethod
     def is_exist_sponsor(email: str, phone_number: str):
         cursor = mysql.cursor()
         query = 'select * from sponsors where email = %s and phone_number = %s'
@@ -82,3 +90,30 @@ class SponsorService(object):
         query = 'delete from donate_detail where id = %s'
         cursor.execute(query, id)
         mysql.commit()
+
+    @staticmethod
+    def get_list_donate_details_of_sponsor(sponsor_id: int, start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
+
+        cursor = mysql.cursor()
+        query = 'select * from donate_detail where sponsor_id = %s and created_at between %s and %s'
+        cursor.execute(query, (sponsor_id, start_at, end_at))
+        donate_details = cursor.fetchall()
+        return donate_details
+
+    @staticmethod
+    def get_total_donations(sponsor_id: int, start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
+
+        cursor = mysql.cursor()
+        query = 'select sum(donations) as total_donations from donate_detail ' \
+                'where sponsor_id = %s and created_at between %s and %s'
+        cursor.execute(query, (sponsor_id, start_at, end_at))
+        total_donations = cursor.fetchone()
+        return total_donations

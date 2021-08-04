@@ -1,4 +1,6 @@
 import logging
+from datetime import date
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -39,7 +41,7 @@ def get_list_sponsors():
 
 @router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_sponsor_detail(id: int):
-    sponsor = SponsorService.get_sponsor_detail(id=id)
+    sponsor = SponsorService.get_sponsor(id=id)
     if sponsor is None:
         raise HTTPException(status_code=400, detail='Sponsor not found')
     return sponsor
@@ -53,7 +55,7 @@ def update_info_sponsor(id: int, req: SponsorRequest):
     exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number)
     if exist_sponsor:
         raise HTTPException(status_code=400, detail='sponsor already exist')
-    sponsor = SponsorService.get_sponsor_detail(id=id)
+    sponsor = SponsorService.get_sponsor(id=id)
     if sponsor is None:
         raise HTTPException(status_code=400, detail='Sponsor not found')
 
@@ -69,3 +71,14 @@ def update_info_sponsor(id: int, req: SponsorRequest):
         req.email = sponsor.get('email')
 
     return SponsorService.update_info_sponsor(id=id, data=req)
+
+@router.get('/{id}/donate_detail', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_list_donate_details_of_sponsor(id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
+    sponsor = SponsorService.get_sponsor(id=id)
+    if sponsor is None:
+        raise HTTPException(status_code=400, detail='Sponsor not found')
+
+    res = SponsorService.get_total_donations(sponsor_id=id, start_at=start_at, end_at=end_at)
+    res['donate_details'] = SponsorService.get_list_donate_details_of_sponsor(sponsor_id=id,
+                                                                              start_at=start_at, end_at=end_at)
+    return res
