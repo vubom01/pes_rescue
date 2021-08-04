@@ -1,7 +1,7 @@
 from datetime import date
 
 from app.db.base import mysql
-from app.schemas.sche_sponsor import SponsorRequest
+from app.schemas.sche_sponsor import SponsorRequest, DonateDetailRequest
 
 
 class SponsorService(object):
@@ -26,7 +26,7 @@ class SponsorService(object):
     @staticmethod
     def create_sponsor(data: SponsorRequest):
         cursor = mysql.cursor()
-        query = 'insert into sponsors (first_name, last_name,address, phone_number, email) values (%s, %s, %s, %s, %s)'
+        query = 'insert into sponsors (first_name, last_name, address, phone_number, email) values (%s, %s, %s, %s, %s)'
         cursor.execute(query, (data.first_name, data.last_name, data.address, data.phone_number, data.email))
         mysql.commit()
 
@@ -62,6 +62,14 @@ class SponsorService(object):
         query = 'delete from sponsors where id = %s'
         cursor.execute(query, id)
         mysql.commit()
+
+    @staticmethod
+    def is_exist_donate_detail(transaction_code: str):
+        cursor = mysql.cursor()
+        query = 'select * from donate_detail where transaction_code = %s'
+        cursor.execute(query, transaction_code)
+        donate_detail = cursor.fetchone()
+        return donate_detail
 
     @staticmethod
     def get_list_donate_detail(start_at: date, end_at: date):
@@ -117,3 +125,11 @@ class SponsorService(object):
         cursor.execute(query, (sponsor_id, start_at, end_at))
         total_donations = cursor.fetchone()
         return total_donations
+
+    @staticmethod
+    def create_donate_detail(sponsor_id: int, data: DonateDetailRequest):
+        cursor = mysql.cursor()
+        query = 'insert into donate_detail (sponsor_id, created_at, account_number, transaction_code, donations) ' \
+                'values (%s, %s, %s, %s, %s)'
+        cursor.execute(query, (sponsor_id, date.today(), data.account_number, data.transaction_code, data.donations))
+        mysql.commit()
