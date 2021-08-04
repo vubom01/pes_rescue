@@ -1,7 +1,8 @@
 from datetime import date
 
 from app.db.base import mysql
-from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest, HealthReportRequest
+from app.schemas.sche_veterinary_clinic import (HealthReportRequest,
+                                                VeterinaryClinicRequest)
 
 
 class VeterinaryClinicService(object):

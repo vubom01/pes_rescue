@@ -5,7 +5,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
-from app.schemas.sche_sponsor import SponsorRequest, DonateDetailRequest
+from app.schemas.sche_sponsor import DonateDetailRequest, SponsorRequest
 from app.services.srv_sponsor import SponsorService
 
 logger = logging.getLogger()

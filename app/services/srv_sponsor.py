@@ -1,7 +1,7 @@
 from datetime import date
 
 from app.db.base import mysql
-from app.schemas.sche_sponsor import SponsorRequest, DonateDetailRequest
+from app.schemas.sche_sponsor import DonateDetailRequest, SponsorRequest
 
 
 class SponsorService(object):
