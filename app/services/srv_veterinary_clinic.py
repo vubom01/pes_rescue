@@ -70,7 +70,7 @@ class VeterinaryClinicService(object):
             end_at = '3000_12_31'
 
         cursor = mysql.cursor()
-        query = 'select * from health_report where created_at between %s and %s'
+        query = 'select * from health_report where created_at between %s and %s order by created_at desc'
         cursor.execute(query, (start_at, end_at))
         health_reports = cursor.fetchall()
         return health_reports
