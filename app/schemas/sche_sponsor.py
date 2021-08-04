@@ -13,4 +13,4 @@ class SponsorRequest(BaseModel):
 class DonateDetailRequest(BaseModel):
     account_number: Optional[str]
     transaction_code: Optional[str]
-    donations: Optional[str]
+    donations: Optional[int]

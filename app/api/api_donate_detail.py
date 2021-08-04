@@ -5,6 +5,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
+from app.schemas.sche_sponsor import DonateDetailRequest
 from app.services.srv_sponsor import SponsorService
 
 logger = logging.getLogger()
@@ -20,6 +21,26 @@ def get_donate_detail_by_id(id: int):
     if donate_detail is None:
         raise HTTPException(status_code=400, detail='Donate detail not found')
     return donate_detail
+
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+def update_donate_detail(id: int, req: DonateDetailRequest):
+    donate_detail = SponsorService.get_donate_detail_by_id(id=id)
+    if donate_detail is None:
+        raise HTTPException(status_code=400, detail='Donate detail not found')
+
+    if req.transaction_code:
+        donate_detail = SponsorService.is_exist_donate_detail(transaction_code=req.transaction_code)
+        if donate_detail:
+            raise HTTPException(status_code=400, detail='Donate detail is already exist')
+
+    if req.account_number is None:
+        req.account_number = donate_detail.get('account_number')
+    if req.transaction_code is None:
+        req.transaction_code = donate_detail.get('transaction_code')
+    if req.donations is None:
+        req.donations = donate_detail.get('donations')
+
+    return SponsorService.update_donate_detail(id=id, data=req)
 
 @router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def delete_donate_detail(id: int):
