@@ -97,4 +97,3 @@ class PetService(object):
         cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
                                data.description, data.species, pet_id,))
         mysql.commit()
-
