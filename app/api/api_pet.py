@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
-from app.helpers.login_manager import PermissionRequired, login_required
+from app.helpers.login_manager import PermissionRequired
 from app.schemas.sche_pet import PetInfoRequest, Url
 from app.services.srv_pet import PetService
 
@@ -25,12 +25,20 @@ def create_pet(pet_info: PetInfoRequest):
         raise HTTPException(status_code=400, detail='weight khong duoc de trong')
     if pet_info.species is None:
         raise HTTPException(status_code=400, detail='species khong duoc de trong')
+    if pet_info.gender is None:
+        raise HTTPException(status_code=400, detail='gender khong duoc de trong')
 
     exist_pet = PetService.is_exist_pet(name=pet_info.name)
     if exist_pet:
         raise HTTPException(status_code=400, detail='Pet name is already exist')
+
     if pet_info.species != 'cat' and pet_info.species != 'dog':
         raise HTTPException(status_code=400, detail='species chỉ nhận các giá trị cat, dog')
+    if pet_info.age != 'young' and pet_info.age != 'mature' and pet_info.age != 'old':
+        raise HTTPException(status_code=400, detail='age chỉ nhận các giá trị young, mature, old')
+    if pet_info.gender != 'male' and pet_info.gender != 'female':
+        raise HTTPException(status_code=400, detail='gender chỉ nhận các giá trị male, female')
+
     PetService.create_pet(data=pet_info)
     pet_id = PetService.is_exist_pet(name=pet_info.name)['id']
     return {
@@ -38,11 +46,8 @@ def create_pet(pet_info: PetInfoRequest):
     }
 
 @router.get('')
-def get_list_pets(species: Optional[str] = None):
-    if species is None:
-        pets = PetService.get_list_pets()
-    else:
-        pets = PetService.get_pet_by_species(species=species)
+def get_list_pets(species: Optional[str] = None, age: Optional[str] = None, gender: Optional[str] = None):
+    pets = PetService.get_list_pets(species=species, age=age, gender=gender)
     for pet in pets:
         images = PetService.get_pet_images(pet_id=pet.get('id'))
         pet['images'] = images
@@ -82,8 +87,12 @@ def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
     if pet_info.species is None:
         pet_info.species = pet.get('species')
 
-    if pet_info.species != 'cat' and pet_info.species != 'dog':
+    if pet_info.species != 'dog' and pet_info.species != 'cat':
         raise HTTPException(status_code=400, detail='species chỉ nhận các giá trị cat, dog')
+    if pet_info.age != 'young' and pet_info.age != 'mature' and pet_info.age != 'old':
+        raise HTTPException(status_code=400, detail='age chỉ nhận các giá trị young, mature, old')
+    if pet_info.gender != 'male' and pet_info.gender != 'female':
+        raise HTTPException(status_code=400, detail='gender chỉ nhận các giá trị male, female')
 
     PetService.update_pet_info(pet_id=pet_id, data=pet_info)
 

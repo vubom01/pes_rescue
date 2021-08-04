@@ -11,6 +11,7 @@ class PetInfoRequest(BaseModel):
     weight: Optional[float]
     description: Optional[str]
     species: Optional[str]
+    gender: Optional[str]
 
 class Url(BaseModel):
     url: str

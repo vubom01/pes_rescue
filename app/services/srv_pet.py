@@ -55,10 +55,29 @@ class PetService(object):
         return images
 
     @staticmethod
-    def get_list_pets():
+    def get_list_pets(species: str, age: str, gender: str):
+        if species is None:
+            species1 = 'cat'
+            species2 = 'dog'
+        else:
+            species1 = species2 = species
+
+        if age is None:
+            age1 = 'young'
+            age2 = 'mature'
+            age3 = 'old'
+        else:
+            age1 = age2 = age3 = age
+
+        if gender is None:
+            gender1 = 'male'
+            gender2 = 'female'
+        else:
+            gender1 = gender2 = gender
+
         cursor = mysql.cursor()
-        query = 'select * from pets'
-        cursor.execute(query,)
+        query = 'select * from pets where species in(%s, %s) and age in(%s, %s, %s) and gender in(%s, %s)'
+        cursor.execute(query, (species1, species2, age1, age2, age3, gender1, gender2))
         pets = cursor.fetchall()
         return pets
 
@@ -78,11 +97,3 @@ class PetService(object):
         cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
                                data.description, data.species, pet_id,))
         mysql.commit()
-
-    @staticmethod
-    def get_pet_by_species(species: str):
-        cursor = mysql.cursor()
-        query = 'select * from pets where species = %s'
-        cursor.execute(query, (species,))
-        pets = cursor.fetchall()
-        return pets
