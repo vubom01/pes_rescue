@@ -17,11 +17,11 @@ class Settings(BaseSettings):
     API_KEY = '653773119299745'
     API_SECRET = '0isRuiudDQPpDWy05rBzno4BqVg'
 
-    MAIL_USERNAME = 'vuotnh.hrt@gmail.com'
-    MAIL_PASSWORD = 'zovlyxhjlmahvesp'
-    MAIL_FROM = 'vuotnh.hrt@gmail.com'
-    MAIL_PORT = 587,
-    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_USERNAME = "vuotnh.hrt@gmail.com"
+    MAIL_PASSWORD = "zovlyxhjlmahvesp"
+    MAIL_FROM = "vuotnh.hrt@gmail.com"
+    MAIL_PORT: int = 587
+    MAIL_SERVER = "smtp.gmail.com"
     MAIL_TLS = True
     MAIL_SSL = False
     USE_CREDENTIALS = True

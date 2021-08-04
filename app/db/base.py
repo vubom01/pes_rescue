@@ -12,7 +12,7 @@ cloudinary.config(
 
 mail_config = fastapi_mail.ConnectionConfig(
     MAIL_USERNAME=settings.MAIL_USERNAME,
-    MAIL_PASSWORD=settings.MYSQL_PASSWORD,
+    MAIL_PASSWORD=settings.MAIL_PASSWORD,
     MAIL_FROM=settings.MAIL_FROM,
     MAIL_PORT=settings.MAIL_PORT,
     MAIL_SERVER=settings.MAIL_SERVER,
