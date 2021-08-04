@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
@@ -6,6 +7,7 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from app.helpers.login_manager import PermissionRequired
 from app.schemas.sche_pet import PetInfoRequest, Url
 from app.services.srv_pet import PetService
+from app.services.srv_veterinary_clinic import VeterinaryClinicService
 
 logger = logging.getLogger()
 router = APIRouter()
@@ -113,3 +115,16 @@ def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
 @router.delete('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin'))])
 def delete_image(pet_id: int, req: Url):
     PetService.delete_image(pet_id=pet_id, url=req.url)
+
+@router.get('/{pet_id}/health_report', dependencies=[Depends(PermissionRequired('admin','volunteer'))])
+def get_list_health_report_of_pet(pet_id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
+    pet = PetService.get_pet_by_id(pet_id=pet_id)
+    if pet is None:
+        raise HTTPException(status_code=400, detail='Pet not found')
+    return {
+        'health_reports':
+            VeterinaryClinicService.get_list_health_reports_by_pet_id_or_veterinary_clinic_id(pet_id=pet_id,
+                                                                                              veterinary_clinic_id=None,
+                                                                                              start_at=start_at,
+                                                                                              end_at=end_at)
+    }
