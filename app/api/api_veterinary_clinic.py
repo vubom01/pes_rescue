@@ -1,9 +1,10 @@
 import logging
+from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
-from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest
+from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest, HealthReportResponse
 from app.services.srv_veterinary_clinic import VeterinaryClinicService
 
 logger = logging.getLogger()
@@ -65,3 +66,10 @@ def update_veterinary_clinic(id: int, req: VeterinaryClinicRequest):
         req.email = clinic.get('email')
 
     return VeterinaryClinicService.update_veterinary_clinic(id=id, data=req)
+
+@router.get("/{id}/healthy_report", dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_list_healthy_report_of_veterinary_clinic(id: int, start_at: date, end_at: date):
+    clinic = VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
+    if clinic is None:
+        raise HTTPException(status_code=400, detail='Veterinary clinic not found')
+    return VeterinaryClinicService.get_list_healthy_report(id=id, start_at=start_at, end_at=end_at)

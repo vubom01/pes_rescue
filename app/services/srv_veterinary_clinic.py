@@ -1,5 +1,7 @@
+from datetime import date
+
 from app.db.base import mysql
-from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest
+from app.schemas.sche_veterinary_clinic import VeterinaryClinicRequest, HealthyReportRequest
 
 
 class VeterinaryClinicService(object):
@@ -50,3 +52,16 @@ class VeterinaryClinicService(object):
         query = 'update veterinary_clinic set name = %s, address = %s, phone_number = %s, email = %s where id = %s'
         cursor.execute(query, (data.name, data.address, data.phone_number, data.email, id))
         mysql.commit()
+
+    @staticmethod
+    def get_list_healthy_report(id: int, start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
+        cursor = mysql.cursor()
+        query = 'select pet_id, created_at, veterinary_clinic_id, health_condition, weight, description from  ' \
+                ' health_report where veterinary_clinic_id = %s and created_at between %s and %s order by created_at;'
+        cursor.execute(query, (id, start_at, end_at,))
+        healthy_reports = cursor.fetchall()
+        return healthy_reports

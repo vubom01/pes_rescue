@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
@@ -104,3 +105,10 @@ def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
 @router.delete('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin'))])
 def delete_image(pet_id: int, req: Url):
     PetService.delete_image(pet_id=pet_id, url=req.url)
+
+@router.get('/{pet_id}/health_report', dependencies=[Depends(PermissionRequired('admin','volunteer'))])
+def get_list_health_report_of_pet(pet_id: int, start_at: date, end_at: date):
+    pet = PetService.get_pet_by_id(pet_id=pet_id)
+    if pet is None:
+        raise HTTPException(status_code=400, detail='Pet not found')
+    return PetService.get_list_health_report_of_pet(pet_id=pet_id, start_at=start_at, end_at=end_at)

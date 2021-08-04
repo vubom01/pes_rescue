@@ -1,3 +1,5 @@
+from datetime import date
+
 import cloudinary.uploader
 from fastapi import File
 
@@ -58,7 +60,7 @@ class PetService(object):
     def get_list_pets():
         cursor = mysql.cursor()
         query = 'select * from pets'
-        cursor.execute(query,)
+        cursor.execute(query, )
         pets = cursor.fetchall()
         return pets
 
@@ -86,3 +88,16 @@ class PetService(object):
         cursor.execute(query, (species,))
         pets = cursor.fetchall()
         return pets
+
+    @staticmethod
+    def get_list_health_report_of_pet(pet_id: int, start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
+        cursor = mysql.cursor()
+        query = 'select pet_id, created_at, veterinary_clinic_id, health_condition, weight, description' \
+                ' from health_report where pet_id = %s and created_at between %s and %s order by created_at;'
+        cursor.execute(query, (pet_id, start_at, end_at,))
+        healthy_reports = cursor.fetchall()
+        return healthy_reports
