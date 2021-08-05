@@ -11,7 +11,7 @@ from app.services.srv_veterinary_clinic import VeterinaryClinicService
 logger = logging.getLogger()
 router = APIRouter()
 
-@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
+@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def create_veterinarian(req: VeterinaryClinicRequest):
     if req.name is None:
         raise HTTPException(status_code=400, detail='name khong duoc de trong')
@@ -43,11 +43,11 @@ def get_veterinary_clinic_detail(id: int):
         raise HTTPException(status_code=400, detail='Veterinary clinic not found')
     return clinic
 
-@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_veterinary_clinic(id: int):
     return VeterinaryClinicService.delete_veterinary_clinic(id=id)
 
-@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_veterinary_clinic(id: int, req: VeterinaryClinicRequest):
     clinic = VeterinaryClinicService.get_veterinary_clinic_detail(id=id)
     if clinic is None:

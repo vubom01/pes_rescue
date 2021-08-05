@@ -22,7 +22,7 @@ def get_donate_detail_by_id(id: int):
         raise HTTPException(status_code=400, detail='Donate detail not found')
     return donate_detail
 
-@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_donate_detail(id: int, req: DonateDetailRequest):
     donate_detail = SponsorService.get_donate_detail_by_id(id=id)
     if donate_detail is None:
@@ -42,6 +42,6 @@ def update_donate_detail(id: int, req: DonateDetailRequest):
 
     return SponsorService.update_donate_detail(id=id, data=req)
 
-@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_donate_detail(id: int):
     return SponsorService.delete_donate_detail(id=id)

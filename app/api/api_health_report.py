@@ -12,7 +12,7 @@ from app.services.srv_veterinary_clinic import VeterinaryClinicService
 logger = logging.getLogger()
 router = APIRouter()
 
-@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
+@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def create_health_report(req: HealthReportRequest):
     if req.pet_id is None:
         raise HTTPException(status_code=400, detail='pet_id khong duoc de trong')
@@ -48,7 +48,7 @@ def get_health_report_detail(id: int):
         raise HTTPException(status_code=400, detail='Health report not found')
     return health_report
 
-@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_health_report(id: int, req: HealthReportRequest):
     health_report = VeterinaryClinicService.get_health_report_detail(id=id)
     if health_report is None:
@@ -77,6 +77,6 @@ def update_health_report(id: int, req: HealthReportRequest):
 
     return VeterinaryClinicService.update_health_report(id=id, data=req)
 
-@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_health_report(id: int):
     return VeterinaryClinicService.delete_health_report(id=id)

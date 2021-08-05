@@ -12,7 +12,7 @@ logger = logging.getLogger()
 router = APIRouter()
 
 
-@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
+@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def create_sponsor(req: SponsorRequest):
     if req.first_name is None:
         raise HTTPException(status_code=400, detail='first_name khong duoc de trong')
@@ -46,11 +46,11 @@ def get_sponsor_detail(id: int):
         raise HTTPException(status_code=400, detail='Sponsor not found')
     return sponsor
 
-@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_sponsor(id: int):
     return SponsorService.delete_sponsor(id=id)
 
-@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_info_sponsor(id: int, req: SponsorRequest):
     if req.email and req.phone_number:
         exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number)
@@ -84,7 +84,7 @@ def get_list_donate_details_of_sponsor(id: int, start_at: Optional[date] = None,
                                                                               start_at=start_at, end_at=end_at)
     return res
 
-@router.post('/{id}/donate_detail', dependencies=[Depends(PermissionRequired('admin'))])
+@router.post('/{id}/donate_detail', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def create_donate_detail(id: int, req: DonateDetailRequest):
     if req.account_number is None:
         raise HTTPException(status_code=400, detail='account_number khong duoc de trong')

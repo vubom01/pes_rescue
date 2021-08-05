@@ -13,7 +13,7 @@ logger = logging.getLogger()
 router = APIRouter()
 
 
-@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
+@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def create_pet(pet_info: PetInfoRequest):
     if pet_info.name is None:
         raise HTTPException(status_code=400, detail='name khong duoc de trong')
@@ -65,7 +65,7 @@ def get_pet_by_id(pet_id: int):
     pet['images'] = PetService.get_pet_images(pet_id=pet_id)
     return pet
 
-@router.put('/{pet_id}', dependencies=[Depends(PermissionRequired('admin'))])
+@router.put('/{pet_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
     pet = get_pet_by_id(pet_id=pet_id)
 
@@ -98,7 +98,7 @@ def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
 
     PetService.update_pet_info(pet_id=pet_id, data=pet_info)
 
-@router.post('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin'))])
+@router.post('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
     get_pet_by_id(pet_id=pet_id)
     urls = []
@@ -112,11 +112,11 @@ def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
         'urls': urls
     }
 
-@router.delete('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin'))])
+@router.delete('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_image(pet_id: int, req: Url):
     PetService.delete_image(pet_id=pet_id, url=req.url)
 
-@router.get('/{pet_id}/health_report', dependencies=[Depends(PermissionRequired('admin','volunteer'))])
+@router.get('/{pet_id}/health_report', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_list_health_report_of_pet(pet_id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
     pet = PetService.get_pet_by_id(pet_id=pet_id)
     if pet is None:
