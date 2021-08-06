@@ -88,7 +88,7 @@ def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
         pet_info.description = pet.get('description')
     if pet_info.species is None:
         pet_info.species = pet.get('species')
-    if pet.info.gender is None:
+    if pet_info.gender is None:
         pet_info.gender = pet.get('gender')
 
     if pet_info.species != 'dog' and pet_info.species != 'cat':
