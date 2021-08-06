@@ -2,10 +2,10 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    MYSQL_HOST = 'sql6.freemysqlhosting.net'
-    MYSQL_USER = 'sql6428642'
-    MYSQL_PASSWORD = 'SAwqck96ft'
-    MYSQL_DB = 'sql6428642'
+    MYSQL_HOST = 'pet-rescue.chhw3ihaqbuw.ap-southeast-1.rds.amazonaws.com'
+    MYSQL_USER = 'admin'
+    MYSQL_PASSWORD = 'admin12345'
+    MYSQL_DB = 'pet_rescue'
 
     API_PREFIX = ''
     BACKEND_CORS_ORIGINS = ['*']
