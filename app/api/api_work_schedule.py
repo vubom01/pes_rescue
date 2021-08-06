@@ -4,7 +4,7 @@ from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.helpers.login_manager import PermissionRequired
+from app.helpers.login_manager import PermissionRequired, login_required
 from app.schemas.sche_user import UserItemResponse
 from app.schemas.sche_work_schedule import (ConfirmWorkSchedule, ListWorkSchedule)
 from app.services.srv_user import UserService
@@ -46,8 +46,13 @@ def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[dat
         'users': users
     }
 
-@router.get('/{user_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
+@router.get('/{user_id}', dependencies=[Depends(login_required)])
+def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, end_at: Optional[date] = None,
+                                 current_user: UserItemResponse = Depends(UserService().get_current_user)):
+    if current_user.get('role') != 'admin' and current_user.get('id') != user_id:
+        raise HTTPException(status_code=400,
+                            detail=f'User ' + current_user.get('username') + f' can not access this api')
+
     check_user = UserService.get_user_by_id(user_id=user_id)
     if check_user.get('role') != 'volunteer':
         raise HTTPException(status_code=400, detail="User is not volunteer")
@@ -60,11 +65,3 @@ def get_work_schedule_by_user_id(user_id: int, start_at: Optional[date] = None, 
                                                                                   start_at=start_at, end_at=end_at)
     return user
 
-@router.put('/{user_id}', dependencies=[Depends(PermissionRequired("admin"))])
-def confirm_work_schedule(user_id: int, data: ConfirmWorkSchedule):
-    user = UserService.get_user_by_id(user_id=user_id)
-    if user is None:
-        raise HTTPException(status_code=400, detail="User not found")
-    if user.get('role') != 'volunteer':
-        raise HTTPException(status_code=400, detail="User is not volunteer")
-    return WorkScheduleService.confirm_work_schedule(user_id=user_id, data=data)
