@@ -97,3 +97,10 @@ class PetService(object):
         cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
                                data.description, data.species, pet_id,))
         mysql.commit()
+
+    @staticmethod
+    def delete_pet(pet_id: int):
+        cursor = mysql.cursor()
+        query = 'delete from pets where id = %s'
+        cursor.execute(query, pet_id)
+        mysql.commit()

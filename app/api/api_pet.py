@@ -98,6 +98,10 @@ def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
 
     PetService.update_pet_info(pet_id=pet_id, data=pet_info)
 
+@router.delete('/{pet_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def delete_pet(pet_id: int):
+    PetService.delete_pet(pet_id=pet_id)
+
 @router.post('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
     get_pet_by_id(pet_id=pet_id)
