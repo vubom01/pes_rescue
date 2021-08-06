@@ -20,6 +20,12 @@ def detail_me(current_user: UserItemResponse = Depends(UserService().get_current
 def update_me(request: UserUpdateRequest, current_user: UserItemResponse = Depends(UserService().get_current_user)):
     UserService.update_current_user(data=request, current_user=current_user)
 
+@router.put('/role', dependencies=[Depends(PermissionRequired('admin'))])
+def update_user_role(req: Role):
+    if req.role != 'admin' and req.role != 'volunteer' and req.role != 'guest':
+        raise HTTPException(status_code=400, detail='role chỉ nhận các giá trị admin, volunteer, guest')
+    UserService.update_user_role(user_id=req.user_id, role=req.role)
+
 @router.get('', dependencies=[Depends(login_required)], response_model=ListUsers)
 def get_list_users(role: Optional[str] = None):
     if role is None:
@@ -34,8 +40,3 @@ def get_list_users(role: Optional[str] = None):
 def get_user_by_id(user_id: int):
     return UserService.get_user_by_id(user_id=user_id)
 
-@router.put('/{user_id}/role', dependencies=[Depends(PermissionRequired('admin'))])
-def update_user_role(user_id: int, req: Role):
-    if req.role != 'admin' and req.role != 'volunteer' and req.role != 'guest':
-        raise HTTPException(status_code=400, detail='role chỉ nhận các giá trị admin, volunteer, guest')
-    UserService.update_user_role(user_id=user_id, role=req.role)

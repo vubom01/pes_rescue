@@ -31,4 +31,5 @@ class ListUsers(BaseModel):
     users: List[UserItemResponse]
 
 class Role(BaseModel):
+    user_id: int
     role: str
