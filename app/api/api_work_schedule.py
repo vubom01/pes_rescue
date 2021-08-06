@@ -31,7 +31,7 @@ def upsert_work_schedule(request: ListWorkSchedule,
         else:
             WorkScheduleService.register_work_schedule(user_id=current_user['id'], data=work_schedule)
 
-@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.get('', dependencies=[Depends(PermissionRequired('admin'))])
 def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[date] = None):
     list_users = UserService.get_list_users_by_role(role='volunteer')
     users = []
