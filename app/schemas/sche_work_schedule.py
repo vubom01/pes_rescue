@@ -1,11 +1,15 @@
 from datetime import date
+from typing import Optional, List
 
 from pydantic import BaseModel
 
 
 class WorkSchedule(BaseModel):
     working_day: date
-    working_shift: int
+    working_shift: Optional[int]
+
+class ListWorkSchedule(BaseModel):
+    work_schedule: List[WorkSchedule]
 
 class WorkingDay(BaseModel):
     working_day: date

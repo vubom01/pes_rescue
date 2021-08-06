@@ -1,13 +1,12 @@
 import logging
 from datetime import date
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
 from app.schemas.sche_user import UserItemResponse
-from app.schemas.sche_work_schedule import (ConfirmWorkSchedule, WorkingDay,
-                                            WorkSchedule)
+from app.schemas.sche_work_schedule import (ConfirmWorkSchedule, ListWorkSchedule)
 from app.services.srv_user import UserService
 from app.services.srv_work_schedule import WorkScheduleService
 
@@ -15,32 +14,22 @@ logger = logging.getLogger()
 router = APIRouter()
 
 @router.post('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
-def register_work_schedule(request: WorkSchedule,
-                           current_user: UserItemResponse = Depends(UserService().get_current_user)):
-    res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
-    if res:
-        raise HTTPException(status_code=400, detail='You have registered up for the work schedule for this day')
-    if request.working_shift != 0 and request.working_shift != 1 and request.working_shift != 2:
-        raise HTTPException(status_code=400, detail='work_shift chỉ nhận các giá trị 0, 1, 2')
-    WorkScheduleService.register_work_schedule(user_id=current_user.get('id'), data=request)
-
-@router.delete('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
-def delete_work_schedule(request: WorkingDay,
+def upsert_work_schedule(request: ListWorkSchedule,
                          current_user: UserItemResponse = Depends(UserService().get_current_user)):
-    WorkScheduleService.delete_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
+    for work_schedule in request.work_schedule:
+        working_day = work_schedule.working_day
+        if working_day is None:
+            raise HTTPException(status_code=400, detail='working_day khong duoc de trong')
 
-@router.put('/me', dependencies=[Depends(PermissionRequired('volunteer'))])
-def update_work_schedule(request: WorkSchedule,
-                         current_user: UserItemResponse = Depends(UserService().get_current_user)):
-    if request.working_day is None:
-        raise HTTPException(status_code=400, detail='working_day khong duoc de trong')
+        working_shift = work_schedule.working_shift
+        if working_shift and working_shift != 0 and working_shift != 1 and working_shift != 2:
+            raise HTTPException(status_code=400, detail='working_shift chỉ nhận các giá trị 0, 1, 2')
 
-    res = WorkScheduleService.is_exist_work_schedule(user_id=current_user.get('id'), working_day=request.working_day)
-    if res is None:
-        raise HTTPException(status_code=400, detail="You don't have registered up for the work schedule for this day")
-    if request.working_shift != 0 and request.working_shift != 1 and request.working_shift != 2:
-        raise HTTPException(status_code=400, detail='work_shift chỉ nhận các giá trị 0, 1, 2')
-    WorkScheduleService.update_work_schedule(user_id=current_user.get('id'), data=request)
+        res = WorkScheduleService.is_exist_work_schedule(user_id=current_user['id'], working_day=working_day)
+        if res:
+            WorkScheduleService.update_work_schedule(user_id=current_user['id'], data=work_schedule)
+        else:
+            WorkScheduleService.register_work_schedule(user_id=current_user['id'], data=work_schedule)
 
 @router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_list_work_schedule(start_at: Optional[date] = None, end_at: Optional[date] = None):
