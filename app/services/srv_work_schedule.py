@@ -40,7 +40,7 @@ class WorkScheduleService(object):
         query = 'select users.id, (concat(users.first_name, " ", users.last_name)) as "full_name", ' \
                 'sum(if(wc.working_shift = 0, 2, 1)) as "total_shift" from work_schedule wc ' \
                 'left join users on users.id = wc.user_id where wc.user_id = %s ' \
-                'and wc.working_day between %s and %s'
+                'and wc.working_day between %s and %s and wc.working_shift is not null'
         cursor.execute(query, (user_id, start_at, end_at))
         user = cursor.fetchone()
         return user
