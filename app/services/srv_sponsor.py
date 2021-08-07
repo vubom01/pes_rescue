@@ -110,5 +110,3 @@ class SponsorService(object):
         cursor.execute(query, (start_at, end_at))
         donate_details = cursor.fetchall()
         return donate_details
-
-
