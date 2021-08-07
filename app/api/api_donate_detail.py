@@ -1,7 +1,10 @@
+import csv
 import logging
+import os
 from datetime import date
 from typing import Optional
 
+import cloudinary
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
@@ -67,6 +70,26 @@ def upsert_donate_detail(req: DonateDetailRequest):
 
 @router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_list_donate_detail(start_at: Optional[date] = None, end_at: Optional[date] = None):
+    data = SponsorService.get_list_donate_detail(start_at=start_at, end_at=end_at)
+    fields = ['id', 'created_at', 'sponsor_id', 'full_name', 'email', 'phone_number', 'account_number',
+              'transaction_code', 'donations']
+    file_path = os.getcwd() + '\\report\\' + 'donate_detail.csv'
+    file = open(file_path, "w", newline="\n")
+    writer = csv.writer(file, delimiter=",")
+
+    writer.writerow(fields)
+    for field in data:
+        writer.writerow(field.values())
+    file.close()
+
+    f = open(file_path, "rb")
+    print(os.path.basename(f.name))
+    folder = "donate_detail/" + str(start_at.year) + "/" + str(start_at.month)
+    name = "donate_detail_T" + str(start_at.month)
+    result = cloudinary.uploader.upload(file_path, folder=folder, public_id=name,
+                                        resource_type='raw')
+    url = result.get('url')
     return {
-        'donate_details': SponsorService.get_list_donate_detail(start_at=start_at, end_at=end_at)
+        'url': url
     }
+
