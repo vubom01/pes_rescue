@@ -78,66 +78,40 @@ def get_pet_by_id(pet_id: int):
     return pet
 
 @router.put('/{pet_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def update_pet_info(pet_id: int,
-                    name: str = Form(None),
-                    age: str = Form(None),
-                    gender: str = Form(None),
-                    color: str = Form(None),
-                    health_condition: str = Form(None),
-                    weight: float = Form(None),
-                    species: str = Form(None),
-                    description: str = Form(None),
-                    images: List[UploadFile] = File(None)):
+def update_pet_info(pet_id: int, pet_info: PetInfoRequest):
     pet = get_pet_by_id(pet_id=pet_id)
 
-    if name is None:
-        name = pet.get('name')
+    if pet_info.name is None:
+        pet_info.name = pet.get('name')
     else:
-        if pet.get('name') != name:
-            exist_pet = PetService.is_exist_pet(name=name)
+        if pet.get('name') != pet_info.name:
+            exist_pet = PetService.is_exist_pet(name=pet_info.name)
             if exist_pet:
                 raise HTTPException(status_code=400, detail='Pet name is already exist')
 
-    if age is None:
-        age = pet.get('age')
-    if color is None:
-        color = pet.get('color')
-    if health_condition is None:
-        health_condition = pet.get('health_condition')
-    if weight is None:
-        weight = pet.get('weight')
-    if description is None:
-        description = pet.get('description')
-    if species is None:
-        species = pet.get('species')
-    if gender is None:
-        gender = pet.get('gender')
+    if pet_info.age is None:
+        pet_info.age = pet.get('age')
+    if pet_info.color is None:
+        pet_info.color = pet.get('color')
+    if pet_info.health_condition is None:
+        pet_info.health_condition = pet.get('health_condition')
+    if pet_info.weight is None:
+        pet_info.weight = pet.get('weight')
+    if pet_info.description is None:
+        pet_info.description = pet.get('description')
+    if pet_info.species is None:
+        pet_info.species = pet.get('species')
+    if pet_info.gender is None:
+        pet_info.gender = pet.get('gender')
 
-    if species != 'dog' and species != 'cat':
+    if pet_info.species != 'dog' and pet_info.species != 'cat':
         raise HTTPException(status_code=400, detail='species chỉ nhận các giá trị cat, dog')
-    if age != 'young' and age != 'mature' and age != 'old':
+    if pet_info.age != 'young' and pet_info.age != 'mature' and pet_info.age != 'old':
         raise HTTPException(status_code=400, detail='age chỉ nhận các giá trị young, mature, old')
-    if gender != 'male' and gender != 'female':
+    if pet_info.gender != 'male' and pet_info.gender != 'female':
         raise HTTPException(status_code=400, detail='gender chỉ nhận các giá trị male, female')
 
-    pet_info = {
-        'name': name,
-        'age': age,
-        'gender': gender,
-        'color': color,
-        'health_condition': health_condition,
-        'weight': weight,
-        'species': species,
-        'description': description
-    }
     PetService.update_pet_info(pet_id=pet_id, data=pet_info)
-
-    for image in images:
-        file_name = " ".join(image.filename.strip().split())
-        file_ext = file_name.split('.')[-1]
-        if file_ext.lower() not in ('jpg', 'png', 'jpeg'):
-            raise HTTPException(status_code=400, detail='Can not upload file ' + image.filename)
-        PetService.upload_pet_image(pet_id=pet_id, image=image.file)
 
 @router.delete('/{pet_id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_pet(pet_id: int):

@@ -90,12 +90,12 @@ class PetService(object):
         return pet
 
     @staticmethod
-    def update_pet_info(pet_id: int, data: dict):
+    def update_pet_info(pet_id: int, data: PetInfoRequest):
         cursor = mysql.cursor()
         query = 'update pets set name = %s, age = %s, color = %s, health_condition = %s, ' \
                 'weight = %s, description = %s, species = %s, gender = %s where id = %s'
-        cursor.execute(query, (data['name'], data['age'], data['color'], data['health_condition'], data['weight'],
-                               data['description'], data['species'], data['gender'], pet_id))
+        cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
+                               data.description, data.species, data.gender, pet_id))
         mysql.commit()
 
     @staticmethod
