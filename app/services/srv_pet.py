@@ -13,7 +13,7 @@ class PetService(object):
         result = cloudinary.uploader.upload(image, folder=folder)
         url = result.get('url')
         cursor = mysql.cursor()
-        query = 'insert into pet_images (pet_id, url) values (%s,%s);'
+        query = 'insert into pet_images (pet_id, url) values (%s, %s);'
         cursor.execute(query, (pet_id, url,))
         mysql.commit()
         return {
@@ -90,12 +90,12 @@ class PetService(object):
         return pet
 
     @staticmethod
-    def update_pet_info(pet_id: int, data: PetInfoRequest):
+    def update_pet_info(pet_id: int, data: dict):
         cursor = mysql.cursor()
         query = 'update pets set name = %s, age = %s, color = %s, health_condition = %s, ' \
-                'weight = %s, description = %s, species = %s where id = %s'
-        cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
-                               data.description, data.species, pet_id,))
+                'weight = %s, description = %s, species = %s, gender = %s where id = %s'
+        cursor.execute(query, (data['name'], data['age'], data['color'], data['health_condition'], data['weight'],
+                               data['description'], data['species'], data['gender'], pet_id))
         mysql.commit()
 
     @staticmethod
