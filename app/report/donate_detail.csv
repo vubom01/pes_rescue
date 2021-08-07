@@ -1,5 +1,0 @@
-id,created_at,sponsor_id,full_name,email,phone_number,account_number,transaction_code,donations
-1,2021-01-12,1,vuot nguyen,abcd,abcd,string,123456,2341
-2,2021-02-02,1,vuot nguyen,abcd,abcd,123456,456789,10
-4,2021-08-07,1,vuot nguyen,abcd,abcd,string,string,2341
-5,2021-08-07,1,vuot nguyen,abcd,abcd,string,string1,2341
