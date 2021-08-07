@@ -92,11 +92,6 @@ def update_pet_info(pet_id: int,
 
     if name is None:
         name = pet.get('name')
-    else:
-        exist_pet = PetService.is_exist_pet(name=name)
-        if exist_pet:
-            raise HTTPException(status_code=400, detail='Pet name is already exist')
-
     if age is None:
         age = pet.get('age')
     if color is None:
