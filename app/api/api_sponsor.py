@@ -73,32 +73,3 @@ def update_info_sponsor(id: int, req: SponsorRequest):
 
     return SponsorService.update_info_sponsor(id=id, data=req)
 
-@router.get('/{id}/donate_detail', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def get_list_donate_details_of_sponsor(id: int, start_at: Optional[date] = None, end_at: Optional[date] = None):
-    sponsor = SponsorService.get_sponsor(id=id)
-    if sponsor is None:
-        raise HTTPException(status_code=400, detail='Sponsor not found')
-
-    res = SponsorService.get_total_donations(sponsor_id=id, start_at=start_at, end_at=end_at)
-    res['donate_details'] = SponsorService.get_list_donate_details_of_sponsor(sponsor_id=id,
-                                                                              start_at=start_at, end_at=end_at)
-    return res
-
-@router.post('/{id}/donate_detail', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def create_donate_detail(id: int, req: DonateDetailRequest):
-    if req.account_number is None:
-        raise HTTPException(status_code=400, detail='account_number khong duoc de trong')
-    if req.transaction_code is None:
-        raise HTTPException(status_code=400, detail='transaction_code khong duoc de trong')
-    if req.donations is None:
-        raise HTTPException(status_code=400, detail='donations khong duoc de trong')
-
-    sponsor = SponsorService.get_sponsor(id=id)
-    if sponsor is None:
-        raise HTTPException(status_code=400, detail='Sponsor not found')
-
-    donate_detail = SponsorService.is_exist_donate_detail(transaction_code=req.transaction_code)
-    if donate_detail:
-        raise HTTPException(status_code=400, detail='Donate detail is already exist')
-
-    return SponsorService.create_donate_detail(sponsor_id=id, data=req)
