@@ -1,12 +1,13 @@
 import logging
 from datetime import date
-from typing import Optional, List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired, login_required
 from app.schemas.sche_user import UserItemResponse
-from app.schemas.sche_work_schedule import (ConfirmWorkSchedule, ListWorkSchedule)
+from app.schemas.sche_work_schedule import (ConfirmWorkSchedule,
+                                            ListWorkSchedule)
 from app.services.srv_user import UserService
 from app.services.srv_work_schedule import WorkScheduleService
 

@@ -1,4 +1,5 @@
 from datetime import date
+
 from app.db.base import mysql
 from app.schemas.sche_sponsor import DonateDetailRequest, SponsorRequest
 
@@ -109,6 +110,5 @@ class SponsorService(object):
         cursor.execute(query, (start_at, end_at))
         donate_details = cursor.fetchall()
         return donate_details
-
 
 

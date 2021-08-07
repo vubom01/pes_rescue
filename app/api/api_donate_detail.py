@@ -1,7 +1,8 @@
+import csv
 import logging
+import os
 from datetime import date
 from typing import Optional
-import os, csv
 
 import cloudinary
 from fastapi import APIRouter, Depends, HTTPException
