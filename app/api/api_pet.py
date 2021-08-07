@@ -2,7 +2,7 @@ import logging
 from datetime import date
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Form
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 from app.helpers.login_manager import PermissionRequired
 from app.schemas.sche_pet import PetInfoRequest, Url
