@@ -65,3 +65,8 @@ def upsert_donate_detail(req: DonateDetailRequest):
             'id': req.id
         }
 
+@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+def get_list_donate_detail():
+    return {
+        'donate_details': SponsorService.get_list_donate_detail()
+    }

@@ -94,3 +94,13 @@ class SponsorService(object):
         cursor.execute(query, id)
         donate_detail = cursor.fetchone()
         return donate_detail
+
+    @staticmethod
+    def get_list_donate_detail():
+        cursor = mysql.cursor()
+        query = 'select dd.id, dd.created_at, dd.sponsor_id, (concat(s.first_name, " ", s.last_name)) as full_name, ' \
+                's.email, s.phone_number, dd.account_number, dd.transaction_code, dd.donations ' \
+                'from donate_detail dd inner join sponsors s on dd.sponsor_id = s.id'
+        cursor.execute(query,)
+        donate_details = cursor.fetchall()
+        return donate_details
