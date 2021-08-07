@@ -40,10 +40,10 @@ class PetService(object):
     @staticmethod
     def create_pet(data: PetInfoRequest):
         cursor = mysql.cursor()
-        query = 'insert into pets (name, age, color, health_condition, weight, description, species)' \
-                'values (%s, %s, %s, %s, %s, %s, %s)'
+        query = 'insert into pets (name, age, color, health_condition, weight, description, species, gender)' \
+                'values (%s, %s, %s, %s, %s, %s, %s, %s)'
         cursor.execute(query, (data.name, data.age, data.color, data.health_condition, data.weight,
-                               data.description, data.species,))
+                               data.description, data.species, data.gender))
         mysql.commit()
 
     @staticmethod
