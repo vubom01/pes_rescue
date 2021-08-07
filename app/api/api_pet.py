@@ -106,7 +106,10 @@ def delete_pet(pet_id: int):
 
 @router.post('/{pet_id}/images', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def upload_list_pet_images(pet_id: int, images: List[UploadFile] = File(...)):
-    get_pet_by_id(pet_id=pet_id)
+    pet = PetService.get_pet_by_id(pet_id=pet_id)
+    if pet is None:
+        raise HTTPException(status_code=400, detail='Pet not found')
+
     urls = []
     for image in images:
         file_name = " ".join(image.filename.strip().split())
