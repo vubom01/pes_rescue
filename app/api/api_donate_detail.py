@@ -1,6 +1,6 @@
 import csv
 import logging
-from datetime import date, datetime
+import datetime
 from typing import Optional
 
 import cloudinary
@@ -68,9 +68,8 @@ def upsert_donate_detail(req: DonateDetailRequest):
         }
 
 @router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def get_list_donate_detail(start_at: Optional[date] = None, end_at: Optional[date] = None):
+def get_list_donate_detail(start_at: Optional[datetime.date] = None, end_at: Optional[datetime.date] = None):
     data = SponsorService.get_list_donate_detail(start_at=start_at, end_at=end_at)
-    print(data)
     fields = ['id', 'created_at', 'sponsor_id', 'full_name', 'email', 'phone_number', 'account_number',
               'transaction_code', 'donations']
     file = open('donate_detail.csv', "w", newline="\n")
