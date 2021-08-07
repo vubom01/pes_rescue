@@ -2,7 +2,7 @@ import logging
 from datetime import date
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Form
 
 from app.helpers.login_manager import PermissionRequired
 from app.schemas.sche_pet import PetInfoRequest, Url
@@ -14,35 +14,47 @@ router = APIRouter()
 
 
 @router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def create_pet(pet_info: PetInfoRequest):
-    if pet_info.name is None:
-        raise HTTPException(status_code=400, detail='name khong duoc de trong')
-    if pet_info.age is None:
-        raise HTTPException(status_code=400, detail='age khong duoc de trong')
-    if pet_info.color is None:
-        raise HTTPException(status_code=400, detail='color khong duoc de trong')
-    if pet_info.health_condition is None:
-        raise HTTPException(status_code=400, detail='health_condition khong duoc de trong')
-    if pet_info.weight is None:
-        raise HTTPException(status_code=400, detail='weight khong duoc de trong')
-    if pet_info.species is None:
-        raise HTTPException(status_code=400, detail='species khong duoc de trong')
-    if pet_info.gender is None:
-        raise HTTPException(status_code=400, detail='gender khong duoc de trong')
+def create_pet(name: str = Form(...),
+               age: str = Form(...),
+               gender: str = Form(...),
+               color: str = Form(...),
+               health_condition: str = Form(...),
+               weight: float = Form(...),
+               species: str = Form(...),
+               description: str = Form(...),
+               images: List[UploadFile] = File(...)):
 
-    exist_pet = PetService.is_exist_pet(name=pet_info.name)
+    exist_pet = PetService.is_exist_pet(name=name)
     if exist_pet:
         raise HTTPException(status_code=400, detail='Pet name is already exist')
 
-    if pet_info.species != 'cat' and pet_info.species != 'dog':
+    if species != 'cat' and species != 'dog':
         raise HTTPException(status_code=400, detail='species chỉ nhận các giá trị cat, dog')
-    if pet_info.age != 'young' and pet_info.age != 'mature' and pet_info.age != 'old':
+    if age != 'young' and age != 'mature' and age != 'old':
         raise HTTPException(status_code=400, detail='age chỉ nhận các giá trị young, mature, old')
-    if pet_info.gender != 'male' and pet_info.gender != 'female':
+    if gender != 'male' and gender != 'female':
         raise HTTPException(status_code=400, detail='gender chỉ nhận các giá trị male, female')
 
+    pet_info = {
+        'name': name,
+        'age': age,
+        'gender': gender,
+        'color': color,
+        'health_condition': health_condition,
+        'weight': weight,
+        'species': species,
+        'description': description
+    }
     PetService.create_pet(data=pet_info)
-    pet_id = PetService.is_exist_pet(name=pet_info.name)['id']
+
+    pet_id = PetService.is_exist_pet(name=name)['id']
+    for image in images:
+        file_name = " ".join(image.filename.strip().split())
+        file_ext = file_name.split('.')[-1]
+        if file_ext.lower() not in ('jpg', 'png', 'jpeg'):
+            raise HTTPException(status_code=400, detail='Can not upload file ' + image.filename)
+        PetService.upload_pet_image(pet_id=pet_id, image=image.file)
+
     return {
         "pet_id": pet_id
     }
