@@ -1,10 +1,4 @@
-import json
-import os
 from datetime import date
-import csv
-
-import cloudinary
-
 from app.db.base import mysql
 from app.schemas.sche_sponsor import DonateDetailRequest, SponsorRequest
 
@@ -114,26 +108,7 @@ class SponsorService(object):
                 'where dd.created_at between %s and %s order by created_at'
         cursor.execute(query, (start_at, end_at))
         donate_details = cursor.fetchall()
+        return donate_details
 
-        fields = ['id', 'created_at', 'sponsor_id', 'full_name', 'email', 'phone_number', 'account_number',
-                  'transaction_code', 'donations']
-        file_path = os.getcwd() + '\\report\\' + 'donate_detail.csv'
-        file = open(file_path, "w", newline="\n")
-        writer = csv.writer(file, delimiter=",")
-
-        writer.writerow(fields)
-        for field in donate_details:
-            writer.writerow(field.values())
-        file.close()
-
-        f = open(file_path, "r")
-        folder = "donate_detail/" + str(start_at.year) + "/" + str(start_at.month)
-        name = "donate_detail_T" + str(start_at.month)
-        result = cloudinary.uploader.upload(os.path.basename(f.name), folder=folder, public_id=name,
-                                            resource_type='raw')
-        url = result.get('url')
-        return {
-            'url': url
-        }
 
 
