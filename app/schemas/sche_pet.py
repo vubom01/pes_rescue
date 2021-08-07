@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -13,5 +13,5 @@ class PetInfoRequest(BaseModel):
     species: Optional[str]
     gender: Optional[str]
 
-class Url(BaseModel):
-    url: str
+class Urls(BaseModel):
+    urls: List[str]
