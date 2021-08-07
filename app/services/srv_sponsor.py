@@ -96,11 +96,17 @@ class SponsorService(object):
         return donate_detail
 
     @staticmethod
-    def get_list_donate_detail():
+    def get_list_donate_detail(start_at: date, end_at: date):
+        if start_at is None:
+            start_at = '1000-01-01'
+        if end_at is None:
+            end_at = '3000_12_31'
+
         cursor = mysql.cursor()
         query = 'select dd.id, dd.created_at, dd.sponsor_id, (concat(s.first_name, " ", s.last_name)) as full_name, ' \
                 's.email, s.phone_number, dd.account_number, dd.transaction_code, dd.donations ' \
-                'from donate_detail dd inner join sponsors s on dd.sponsor_id = s.id'
-        cursor.execute(query,)
+                'from donate_detail dd inner join sponsors s on dd.sponsor_id = s.id ' \
+                'where dd.created_at between %s and %s'
+        cursor.execute(query, (start_at, end_at))
         donate_details = cursor.fetchall()
         return donate_details

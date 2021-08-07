@@ -66,7 +66,7 @@ def upsert_donate_detail(req: DonateDetailRequest):
         }
 
 @router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def get_list_donate_detail():
+def get_list_donate_detail(start_at: Optional[date] = None, end_at: Optional[date] = None):
     return {
-        'donate_details': SponsorService.get_list_donate_detail()
+        'donate_details': SponsorService.get_list_donate_detail(start_at=start_at, end_at=end_at)
     }
