@@ -43,7 +43,7 @@ def get_veterinary_clinic_detail(id: int):
 
 @router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_veterinary_clinic(id: int):
-    return VeterinaryClinicService.delete_veterinary_clinic(id=id)
+    VeterinaryClinicService.delete_veterinary_clinic(id=id)
 
 @router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_veterinary_clinic(id: int, req: VeterinaryClinicRequest):
