@@ -36,7 +36,10 @@ def create_health_report(req: HealthReportRequest):
     return VeterinaryClinicService.create_health_report(data=req)
 
 @router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
-def get_list_health_report(start_at: Optional[date] = None, end_at: Optional[date] = None):
+def get_list_health_report(pet_id: Optional[int] = None,
+                           veterinary_clinic_id: Optional[int] = None,
+                           start_at: Optional[date] = None,
+                           end_at: Optional[date] = None):
     return {
         'health_reports': VeterinaryClinicService.get_list_health_reports(start_at=start_at, end_at=end_at)
     }
