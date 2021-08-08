@@ -41,7 +41,9 @@ def get_list_health_report(pet_id: Optional[int] = None,
                            start_at: Optional[date] = None,
                            end_at: Optional[date] = None):
     return {
-        'health_reports': VeterinaryClinicService.get_list_health_reports(start_at=start_at, end_at=end_at)
+        'health_reports': VeterinaryClinicService.get_list_health_reports(pet_id=pet_id,
+                                                                          veterinary_clinic_id=veterinary_clinic_id,
+                                                                          start_at=start_at, end_at=end_at)
     }
 
 @router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
