@@ -48,7 +48,7 @@ def get_sponsor_detail(id: int):
 
 @router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def delete_sponsor(id: int):
-    return SponsorService.delete_sponsor(id=id)
+    SponsorService.delete_sponsor(id=id)
 
 @router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_info_sponsor(id: int, req: SponsorRequest):
