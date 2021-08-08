@@ -56,9 +56,10 @@ def update_veterinary_clinic(id: int, req: VeterinaryClinicRequest):
     if req.name is None:
         req.name = clinic.get('name')
     else:
-        exist_clinic = VeterinaryClinicService.is_exist_clinic(name=req.name)
-        if exist_clinic:
-            raise HTTPException(status_code=400, detail='Veterinary clinic already exist')
+        if req.name != clinic.get('name'):
+            exist_clinic = VeterinaryClinicService.is_exist_clinic(name=req.name)
+            if exist_clinic:
+                raise HTTPException(status_code=400, detail='Veterinary clinic already exist')
 
     if req.name is None:
         req.name = clinic.get('name')

@@ -52,13 +52,15 @@ def delete_sponsor(id: int):
 
 @router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def update_info_sponsor(id: int, req: SponsorRequest):
-    if req.email and req.phone_number:
-        exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number)
-        if exist_sponsor:
-            raise HTTPException(status_code=400, detail='sponsor already exist')
     sponsor = SponsorService.get_sponsor(id=id)
     if sponsor is None:
         raise HTTPException(status_code=400, detail='Sponsor not found')
+
+    if req.email and req.phone_number:
+        if req.email != sponsor.get('email') and req.phone_number != sponsor.get('phone_number'):
+            exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number)
+            if exist_sponsor:
+                raise HTTPException(status_code=400, detail='sponsor already exist')
 
     if req.first_name is None:
         req.first_name = sponsor.get('first_name')

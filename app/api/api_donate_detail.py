@@ -44,9 +44,10 @@ def upsert_donate_detail(req: DonateDetailRequest):
             raise HTTPException(status_code=400, detail='Donate detail not found')
 
         if req.transaction_code:
-            donate_detail = SponsorService.is_exist_donate_detail(transaction_code=req.transaction_code)
-            if donate_detail:
-                raise HTTPException(status_code=400, detail='Donate detail is already exist')
+            if req.transaction_code != donate_detail.get('transaction_code'):
+                donate_detail = SponsorService.is_exist_donate_detail(transaction_code=req.transaction_code)
+                if donate_detail:
+                    raise HTTPException(status_code=400, detail='Donate detail is already exist')
         else:
             req.transaction_code = donate_detail.get('transaction_code')
 
