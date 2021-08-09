@@ -25,7 +25,6 @@ class UserUpdateRequest(BaseModel):
     last_name: Optional[str]
     email: Optional[str]
     phone_number: Optional[str]
-    password: Optional[str]
 
 class ListUsers(BaseModel):
     users: List[UserItemResponse]
@@ -33,3 +32,11 @@ class ListUsers(BaseModel):
 class Role(BaseModel):
     user_id: int
     role: str
+
+class PasswordUpdate(BaseModel):
+    current_password: str
+    update_password: str
+
+class UserPassword(BaseModel):
+    id: int
+    password: str

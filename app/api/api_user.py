@@ -3,9 +3,10 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from app.core.security import verify_password
 from app.helpers.login_manager import PermissionRequired, login_required
 from app.schemas.sche_user import (ListUsers, Role, UserItemResponse,
-                                   UserUpdateRequest)
+                                   UserUpdateRequest, PasswordUpdate, UserPassword)
 from app.services.srv_user import UserService
 
 logger = logging.getLogger()
@@ -25,6 +26,12 @@ def update_user_role(req: Role):
     if req.role != 'admin' and req.role != 'volunteer' and req.role != 'guest':
         raise HTTPException(status_code=400, detail='role chỉ nhận các giá trị admin, volunteer, guest')
     UserService.update_user_role(user_id=req.user_id, role=req.role)
+
+@router.put('/password', dependencies=[Depends(login_required)])
+def update_password(request: PasswordUpdate, current_user: UserPassword = Depends(UserService().get_current_user)):
+    if not verify_password(request.current_password, current_user['password']):
+        raise HTTPException(status_code=400, detail='mat khau khong chinh xac')
+    UserService.update_password(user_id=current_user['id'], password=request.update_password)
 
 @router.get('', dependencies=[Depends(login_required)], response_model=ListUsers)
 def get_list_users(role: Optional[str] = None):

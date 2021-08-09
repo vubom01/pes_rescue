@@ -75,16 +75,10 @@ class UserService(object):
             data.email = current_user['email']
         if data.phone_number is None:
             data.phone_number = current_user['phone_number']
-        if data.password is None:
-            data.password = current_user['password']
-        else:
-            data.password = get_password_hash(data.password)
 
         cursor = mysql.cursor()
-        query = 'update users set first_name = %s, last_name = %s, email = %s, phone_number = %s, password = %s ' \
-                'where id = %s'
-        cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number, data.password,
-                               current_user['id'],))
+        query = 'update users set first_name = %s, last_name = %s, email = %s, phone_number = %s where id = %s'
+        cursor.execute(query, (data.first_name, data.last_name, data.email, data.phone_number, current_user['id']))
         mysql.commit()
 
     @staticmethod
@@ -120,3 +114,9 @@ class UserService(object):
         cursor.execute(query, (role, user_id,))
         mysql.commit()
 
+    @staticmethod
+    def update_password(user_id: int, password: str):
+        cursor = mysql.cursor()
+        query = 'update users set password = %s where id = %s'
+        cursor.execute(query, (get_password_hash(password), user_id))
+        mysql.commit()
