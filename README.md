@@ -7,6 +7,7 @@ $ source .venv/bin/activate (Ubuntu)
   .venv\Scripts\activate (Windows)
 $ pip install -r requirements.txt
 $ uvicorn app.main:app --host 127.0.0.1 --port 8000
+$ gunicorn -k uvicorn.workers.UvicornWorker --bind "0.0.0.0:8080"  app.main:app
 ```
 
 ## Cấu trúc project
