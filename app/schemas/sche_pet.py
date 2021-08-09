@@ -27,3 +27,8 @@ class PetInfoResponse(BaseModel):
     description: str
     species: str
 
+    class Url(BaseModel):
+        url: str
+    images: List[Url]
+
+

@@ -57,6 +57,7 @@ def get_list_health_report(pet_id: Optional[int] = None,
         res['pet']['weight'] = res['weight']
         res['pet']['description'] = res['description']
         res['pet']['species'] = res['species']
+        res['pet']['images'] = PetService.get_pet_images(pet_id=res['pet']['id'])
 
         res['veterinary_clinic'] = dict()
         res['veterinary_clinic']['id'] = res['vc.id']
@@ -88,6 +89,7 @@ def get_health_report_detail(id: int):
     res['pet']['weight'] = res['weight']
     res['pet']['description'] = res['description']
     res['pet']['species'] = res['species']
+    res['pet']['images'] = PetService.get_pet_images(pet_id=res['pet']['id'])
 
     res['veterinary_clinic'] = dict()
     res['veterinary_clinic']['id'] = res['vc.id']
