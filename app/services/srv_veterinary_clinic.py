@@ -104,7 +104,9 @@ class VeterinaryClinicService(object):
     @staticmethod
     def get_health_report_detail(id: int):
         cursor = mysql.cursor()
-        query = 'select * from health_report where id = %s'
+        query = 'select p.*, vc.*, hr.* from health_report hr ' \
+                'inner join pets p on hr.pet_id = p.id ' \
+                'inner join veterinary_clinic vc on hr.veterinary_clinic_id = vc.id where hr.id = %s'
         cursor.execute(query, id)
         health_report = cursor.fetchone()
         return health_report
