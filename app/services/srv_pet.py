@@ -76,7 +76,8 @@ class PetService(object):
             gender1 = gender2 = gender
 
         cursor = mysql.cursor()
-        query = 'select * from pets where species in(%s, %s) and age in(%s, %s, %s) and gender in(%s, %s)'
+        query = 'select * from pets where species in(%s, %s) and age in(%s, %s, %s) and gender in(%s, %s) ' \
+                'order by id desc'
         cursor.execute(query, (species1, species2, age1, age2, age3, gender1, gender2))
         pets = cursor.fetchall()
         return pets
