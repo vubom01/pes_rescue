@@ -72,18 +72,30 @@ class VeterinaryClinicService(object):
 
         cursor = mysql.cursor()
         if pet_id is None and veterinary_clinic_id is None:
-            query = 'select * from health_report where created_at between %s and %s order by created_at desc'
+            query = 'select p.*, vc.*, hr.* from health_report hr ' \
+                    'inner join pets p on hr.pet_id = p.id ' \
+                    'inner join veterinary_clinic vc on hr.veterinary_clinic_id = vc.id ' \
+                    'where created_at between %s and %s order by created_at desc'
             cursor.execute(query, (start_at, end_at))
         if pet_id is None and veterinary_clinic_id:
-            query = 'select * from health_report where veterinary_clinic_id = %s and created_at between %s and %s ' \
+            query = 'select p.*, vc.*, hr.* from health_report hr ' \
+                    'inner join pets p on hr.pet_id = p.id ' \
+                    'inner join veterinary_clinic vc on hr.veterinary_clinic_id = vc.id ' \
+                    'where veterinary_clinic_id = %s and created_at between %s and %s ' \
                     'order by created_at desc'
             cursor.execute(query, (veterinary_clinic_id, start_at, end_at))
         if pet_id and veterinary_clinic_id is None:
-            query = 'select * from health_report where pet_id = %s and created_at between %s and %s ' \
+            query = 'select p.*, vc.*, hr.* from health_report hr ' \
+                    'inner join pets p on hr.pet_id = p.id ' \
+                    'inner join veterinary_clinic vc on hr.veterinary_clinic_id = vc.id ' \
+                    'where pet_id = %s and created_at between %s and %s ' \
                     'order by created_at desc'
             cursor.execute(query, (pet_id, start_at, end_at))
         if pet_id and veterinary_clinic_id:
-            query = 'select * from health_report where pet_id = %s and veterinary_clinic_id = %s ' \
+            query = 'select p.*, vc.*, hr.* from health_report hr ' \
+                    'inner join pets p on hr.pet_id = p.id ' \
+                    'inner join veterinary_clinic vc on hr.veterinary_clinic_id = vc.id ' \
+                    'where pet_id = %s and veterinary_clinic_id = %s ' \
                     'and created_at between %s and %s order by created_at desc'
             cursor.execute(query, (pet_id, veterinary_clinic_id, start_at, end_at))
         health_reports = cursor.fetchall()

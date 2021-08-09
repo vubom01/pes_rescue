@@ -15,3 +15,15 @@ class PetInfoRequest(BaseModel):
 
 class Urls(BaseModel):
     urls: List[str]
+
+class PetInfoResponse(BaseModel):
+    id: int
+    name: str
+    age: str
+    gender: str
+    color: str
+    health_condition: str
+    weight: float
+    description: str
+    species: str
+

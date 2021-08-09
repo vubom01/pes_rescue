@@ -5,7 +5,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.helpers.login_manager import PermissionRequired
-from app.schemas.sche_veterinary_clinic import HealthReportRequest
+from app.schemas.sche_veterinary_clinic import HealthReportRequest, HealthReports
 from app.services.srv_pet import PetService
 from app.services.srv_veterinary_clinic import VeterinaryClinicService
 
@@ -35,16 +35,40 @@ def create_health_report(req: HealthReportRequest):
 
     return VeterinaryClinicService.create_health_report(data=req)
 
-@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))], response_model=HealthReports)
 def get_list_health_report(pet_id: Optional[int] = None,
                            veterinary_clinic_id: Optional[int] = None,
                            start_at: Optional[date] = None,
                            end_at: Optional[date] = None):
-    return {
-        'health_reports': VeterinaryClinicService.get_list_health_reports(pet_id=pet_id,
-                                                                          veterinary_clinic_id=veterinary_clinic_id,
-                                                                          start_at=start_at, end_at=end_at)
-    }
+    response = dict()
+    response['health_reports'] = VeterinaryClinicService.get_list_health_reports(pet_id=pet_id,
+                                                                                 veterinary_clinic_id=veterinary_clinic_id,
+                                                                                 start_at=start_at, end_at=end_at)
+    for res in response['health_reports']:
+        res['pet'] = dict()
+        res['pet']['id'] = res['id']
+        res['pet']['name'] = res['name']
+        res['pet']['age'] = res['age']
+        res['pet']['gender'] = res['gender']
+        res['pet']['color'] = res['color']
+        res['pet']['health_condition'] = res['health_condition']
+        res['pet']['weight'] = res['weight']
+        res['pet']['description'] = res['description']
+        res['pet']['species'] = res['species']
+
+        res['veterinary_clinic'] = dict()
+        res['veterinary_clinic']['id'] = res['vc.id']
+        res['veterinary_clinic']['name'] = res['vc.name']
+        res['veterinary_clinic']['address'] = res['address']
+        res['veterinary_clinic']['phone_number'] = res['phone_number']
+        res['veterinary_clinic']['email'] = res['email']
+
+        res['id'] = res['hr.id']
+        res['weight'] = res['hr.weight']
+        res['health_condition'] = res['hr.health_condition']
+        res['description'] = res['hr.description']
+
+    return response
 
 @router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
 def get_health_report_detail(id: int):
