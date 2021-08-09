@@ -25,7 +25,7 @@ def create_sponsor(req: SponsorRequest):
     if req.phone_number is None:
         raise HTTPException(status_code=400, detail='phone_number khong duoc de trong')
 
-    exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number).get('id')
+    exist_sponsor = SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number)
     if exist_sponsor:
         raise HTTPException(status_code=400, detail='Sponsor is already exist')
     SponsorService.create_sponsor(data=req)
