@@ -13,7 +13,7 @@ from app.services.srv_sponsor import SponsorService
 logger = logging.getLogger()
 router = APIRouter()
 
-@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
 def upsert_donate_detail(req: DonateDetailRequest):
     if req.id is None:
         if req.sponsor_id is None:
@@ -68,7 +68,7 @@ def upsert_donate_detail(req: DonateDetailRequest):
             'id': req.id
         }
 
-@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.get('', dependencies=[Depends(PermissionRequired('admin'))])
 def get_list_donate_detail(start_at: Optional[datetime.date] = None, end_at: Optional[datetime.date] = None):
     data = SponsorService.get_list_donate_detail(start_at=start_at, end_at=end_at)
     fields = ['id', 'created_at', 'sponsor_id', 'full_name', 'email', 'phone_number', 'account_number',

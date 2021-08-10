@@ -12,7 +12,7 @@ logger = logging.getLogger()
 router = APIRouter()
 
 
-@router.post('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.post('', dependencies=[Depends(PermissionRequired('admin'))])
 def create_sponsor(req: SponsorRequest):
     if req.first_name is None:
         raise HTTPException(status_code=400, detail='first_name khong duoc de trong')
@@ -33,24 +33,24 @@ def create_sponsor(req: SponsorRequest):
         'sponsor_id': SponsorService.is_exist_sponsor(email=req.email, phone_number=req.phone_number).get('id')
     }
 
-@router.get('', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.get('', dependencies=[Depends(PermissionRequired('admin'))])
 def get_list_sponsors():
     return {
         'sponsors': SponsorService.get_list_sponsors()
     }
 
-@router.get('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.get('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def get_sponsor_detail(id: int):
     sponsor = SponsorService.get_sponsor(id=id)
     if sponsor is None:
         raise HTTPException(status_code=400, detail='Sponsor not found')
     return sponsor
 
-@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.delete('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def delete_sponsor(id: int):
     return SponsorService.delete_sponsor(id=id)
 
-@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin', 'volunteer'))])
+@router.put('/{id}', dependencies=[Depends(PermissionRequired('admin'))])
 def update_info_sponsor(id: int, req: SponsorRequest):
     sponsor = SponsorService.get_sponsor(id=id)
     if sponsor is None:
