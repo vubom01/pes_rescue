@@ -1,3 +1,8 @@
+# create Database
+```bash
+$ docker build -t {name_image} .
+$ docker run --name {name} --restart unless-stopped -p 3306:3306 -d {name_image}
+```
 ## Install and run project
 ```
 $ git clone https://github.com/vubom01/pet-rescue
@@ -5,7 +10,7 @@ $ cd pet-rescue
 $ virtualenv -p python3 .venv
 $ source .venv/bin/activate (Ubuntu)
   .venv\Scripts\activate (Windows)
-$ pip install -r requirements.txt
+$ pip install -r requirements.txt  
 $ uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
