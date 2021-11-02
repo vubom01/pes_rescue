@@ -2,9 +2,12 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    MYSQL_HOST = 'pet-rescue.chhw3ihaqbuw.ap-southeast-1.rds.amazonaws.com'
-    MYSQL_USER = 'admin'
-    MYSQL_PASSWORD = 'admin12345'
+    # MYSQL_HOST = 'pet-rescue.chhw3ihaqbuw.ap-southeast-1.rds.amazonaws.com'
+    MYSQL_HOST = 'localhost'
+    # MYSQL_USER = 'admin'
+    MYSQL_USER = 'root'
+    # MYSQL_PASSWORD = 'admin12345'
+    MYSQL_PASSWORD = '13102001'
     MYSQL_DB = 'pet_rescue'
 
     API_PREFIX = ''
