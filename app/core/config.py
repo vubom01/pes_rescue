@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     # MYSQL_USER = 'admin'
     MYSQL_USER = 'root'
     # MYSQL_PASSWORD = 'admin12345'
-    MYSQL_PASSWORD = ''
+    MYSQL_PASSWORD = '13102001'
     MYSQL_DB = 'pet_rescue'
 
     API_PREFIX = ''
