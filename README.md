@@ -9,7 +9,8 @@ $ pip install -r requirements.txt
 $ uvicorn app.main:app --host 127.0.0.1 --port 8000
 $ gunicorn -k uvicorn.workers.UvicornWorker --bind "0.0.0.0:8080"  app.main:app
 ```
-
+## Tài liệu project
+[API docs](https://docs.google.com/spreadsheets/d/11lgW0Kr1QNtl3sgHPRXMNCTPrzBn3FbNzDbKb2s9Pxo/edit#gid=0)
 ## Cấu trúc project
 ```
 ├── app  
@@ -25,4 +26,5 @@ $ gunicorn -k uvicorn.workers.UvicornWorker --bind "0.0.0.0:8080"  app.main:app
 ├── README.md  
 ├── requirements.txt
 └── runtime.txt
-  
+
+
